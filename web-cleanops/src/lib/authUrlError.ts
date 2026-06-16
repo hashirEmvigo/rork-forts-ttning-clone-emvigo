@@ -4,8 +4,8 @@
  * When a Super Admin / Company Admin password-recovery (or invite) link's
  * single-use token is already consumed, expired, or otherwise rejected, GoTrue
  * does NOT deliver a session. Instead it redirects the browser to the configured
- * redirect URL with the failure encoded in the URL — for the implicit flow this
- * lands in the hash, e.g.:
+ * redirect URL with the failure encoded in the URL — for recovery/invite
+ * links this lands in the hash, e.g.:
  *
  *   /reset-password#error=access_denied&error_code=otp_expired&
  *     error_description=Email+link+is+invalid+or+has+expired
@@ -46,8 +46,8 @@ function stripLeading(value: string, prefix: "#" | "?"): string {
 /**
  * Pure parser: given a raw `hash` and `search` string, returns the encoded
  * Supabase auth error, or `null` when neither carries one. The hash takes
- * precedence because the implicit flow encodes failures there; the query string
- * is a fallback for proxies/templates that move the params.
+ * precedence because recovery/invite links encode failures there; the query
+ * string is a fallback for proxies/templates that move the params.
  */
 export function parseSupabaseAuthLinkError(input: {
   hash: string;

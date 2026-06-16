@@ -30,11 +30,12 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
         autoRefreshToken: true,
         // Parse recovery/invite tokens from the URL on load so auth email
         // links land in a valid session on their dedicated app routes.
+        // Recovery/invite links use a direct token exchange (bypassing
+        // PKCE) via `detectSessionInUrl`, so cross-device flows still work.
         detectSessionInUrl: true,
-        // Implicit flow uses a URL hash token that works even when the
-        // recovery email is opened on a different device/browser than the one
-        // that requested it (PKCE would fail in that cross-device case).
-        flowType: "implicit",
+        // PKCE exchanges an authorization code via POST instead of
+        // exposing tokens in the URL hash, which is more secure for SPA auth.
+        flowType: "pkce",
       },
     })
   : null;
