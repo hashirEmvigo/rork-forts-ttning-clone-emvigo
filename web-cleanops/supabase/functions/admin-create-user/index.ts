@@ -45,7 +45,10 @@
 // Required runtime env (auto-injected by Supabase):
 //   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
 // Optional secrets (set with `supabase secrets set ...`):
-//   BOOTSTRAP_SUPER_ADMIN_EMAIL   — locks bootstrap to a single email
+//   BOOTSTRAP_SUPER_ADMIN_EMAIL   — required for bootstrap; locks to a single email
+//   BOOTSTRAP_SUPER_ADMIN_TOKEN   — required for bootstrap; one-time secret token
+//                                    that must be provided as bootstrap_token in the
+//                                    request body
 //   INVITE_REDIRECT_URL           — where the invite link sends the user
 // ============================================================================
 
@@ -57,7 +60,7 @@ type BaseRole = (typeof ALLOWED_ROLES)[number];
 // Bumped on every meaningful change so the deployed build is identifiable in
 // logs and in the success/error responses. If this value is NOT present in the
 // runtime logs (or the response), the OLD function is still deployed.
-const FUNCTION_VERSION = "2025-staffid-1";
+const FUNCTION_VERSION = "2025-staffid-2-bootstrap-hardening";
 
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
@@ -73,6 +76,8 @@ interface CreateUserBody {
   full_name?: unknown;
   temp_password?: unknown;
   redirect_to?: unknown;
+  /** Required during bootstrap; must match BOOTSTRAP_SUPER_ADMIN_TOKEN. */
+  bootstrap_token?: unknown;
 }
 
 interface ValidatedInput {
@@ -428,13 +433,70 @@ Deno.serve(async (req: Request): Promise<Response> => {
         401,
       );
     }
+    // Bootstrap hardening: BOOTSTRAP_SUPER_ADMIN_EMAIL is REQUIRED.
+    // If it is not set, bootstrap is not configured and must be rejected.
     const expectedEmail = Deno.env.get("BOOTSTRAP_SUPER_ADMIN_EMAIL")?.trim().toLowerCase();
-    if (expectedEmail && expectedEmail !== input.email) {
+    if (!expectedEmail) {
+      console.error(
+        "[admin-create-user] Bootstrap rejected: BOOTSTRAP_SUPER_ADMIN_EMAIL is not set.",
+      );
       return json(
-        { error: "Bootstrap is locked to a different email address." },
+        {
+          error:
+            "Bootstrap is not configured. Set BOOTSTRAP_SUPER_ADMIN_EMAIL before " +
+            "creating the first Super Admin.",
+          code: "bootstrap_not_configured",
+        },
         401,
       );
     }
+    if (expectedEmail !== input.email) {
+      return json(
+        {
+          error: "Bootstrap is locked to a different email address.",
+          code: "bootstrap_email_mismatch",
+        },
+        401,
+      );
+    }
+
+    // Bootstrap token: a one-time secret the caller must supply. This closes
+    // the biggest abuse path — even if BOOTSTRAP_SUPER_ADMIN_EMAIL is set, an
+    // unauthenticated caller also needs the shared secret.
+    const expectedToken = Deno.env.get("BOOTSTRAP_SUPER_ADMIN_TOKEN")?.trim();
+    if (!expectedToken) {
+      console.error(
+        "[admin-create-user] Bootstrap rejected: BOOTSTRAP_SUPER_ADMIN_TOKEN is not set.",
+      );
+      return json(
+        {
+          error:
+            "Bootstrap is not configured. Set BOOTSTRAP_SUPER_ADMIN_TOKEN before " +
+            "creating the first Super Admin.",
+          code: "bootstrap_not_configured",
+        },
+        401,
+      );
+    }
+    const providedToken =
+      typeof body.bootstrap_token === "string" && body.bootstrap_token.trim() !== ""
+        ? body.bootstrap_token.trim()
+        : null;
+    if (providedToken !== expectedToken) {
+      console.warn(
+        "[admin-create-user] Bootstrap rejected: invalid or missing bootstrap_token.",
+      );
+      return json(
+        {
+          error:
+            "Bootstrap requires a valid bootstrap_token. Provide the one-time token " +
+            "configured in BOOTSTRAP_SUPER_ADMIN_TOKEN.",
+          code: "bootstrap_token_invalid",
+        },
+        401,
+      );
+    }
+
     console.warn(
       "[admin-create-user] Bootstrap mode: creating the first super_admin.",
       { email: input.email },

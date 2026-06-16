@@ -103,6 +103,12 @@ export interface CreateUserInput {
    * activation route instead of relying on the server's INVITE_REDIRECT_URL.
    */
   redirectTo?: string | null;
+  /**
+   * Required during bootstrap (creating the very first Super Admin when no
+   * active admin profiles exist yet). Must match the
+   * BOOTSTRAP_SUPER_ADMIN_TOKEN secret set on the Edge Function.
+   */
+  bootstrapToken?: string | null;
 }
 
 /** Result of a create-user attempt. */
@@ -322,6 +328,8 @@ export async function createSupabaseUser(
         ...(input.tempPassword ? { temp_password: input.tempPassword } : {}),
         // Explicit invite redirect so the link resolves to a real app route.
         ...(input.redirectTo ? { redirect_to: input.redirectTo } : {}),
+        // Bootstrap token for first-ever Super Admin creation.
+        ...(input.bootstrapToken ? { bootstrap_token: input.bootstrapToken } : {}),
       }),
     });
 
