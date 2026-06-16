@@ -1,0 +1,98 @@
+[
+  {
+    "id": "frf_001",
+    "key": "feature.schedule.grid",
+    "featureName": "Schedule Grid",
+    "module": "schedule",
+    "state": "enabled",
+    "reason": "Normal mock state.",
+    "changedBy": "system_mock",
+    "changedAt": "2026-06-11T12:00:00Z",
+    "linkedIncidentId": null,
+    "auditRequired": true
+  },
+  {
+    "id": "frf_002",
+    "key": "feature.booking_list.auto_refresh",
+    "featureName": "Booking List auto-refresh",
+    "module": "schedule",
+    "state": "limited_mode",
+    "reason": "Mock limited mode after frontend loop incident.",
+    "changedBy": "runtime_guard_mock",
+    "changedAt": "2026-06-11T09:13:30Z",
+    "linkedIncidentId": "inc_mock_001",
+    "auditRequired": true
+  },
+  {
+    "id": "frf_003",
+    "key": "feature.invoices.export",
+    "featureName": "Invoice export",
+    "module": "invoices",
+    "state": "limited_mode",
+    "reason": "Mock export timeout mitigation.",
+    "changedBy": "runtime_guard_mock",
+    "changedAt": "2026-06-11T08:48:30Z",
+    "linkedIncidentId": "inc_mock_003",
+    "auditRequired": true
+  },
+  {
+    "id": "frf_004",
+    "key": "feature.ai.chat",
+    "featureName": "AI chat assistant",
+    "module": "chat",
+    "state": "enabled",
+    "reason": "Enabled with mock quota guard.",
+    "changedBy": "super_admin_mock",
+    "changedAt": "2026-06-11T12:00:00Z",
+    "linkedIncidentId": null,
+    "auditRequired": true
+  },
+  {
+    "id": "frf_005",
+    "key": "feature.media.upload",
+    "featureName": "Media upload",
+    "module": "media",
+    "state": "enabled",
+    "reason": "Normal mock state with upload concurrency guard.",
+    "changedBy": "system_mock",
+    "changedAt": "2026-06-11T12:00:00Z",
+    "linkedIncidentId": null,
+    "auditRequired": true
+  },
+  {
+    "id": "frf_006",
+    "key": "feature.automation.runner",
+    "featureName": "Automation runner",
+    "module": "system",
+    "state": "disabled",
+    "reason": "Production automation runner is intentionally out of scope for Slice 1.",
+    "changedBy": "architecture_decision",
+    "changedAt": "2026-06-11T12:00:00Z",
+    "linkedIncidentId": null,
+    "auditRequired": true
+  },
+  {
+    "id": "frf_007",
+    "key": "feature.public.pricing_calculator",
+    "featureName": "Public pricing calculator",
+    "module": "system",
+    "state": "enabled",
+    "reason": "Normal mock state with public-surface request guard.",
+    "changedBy": "system_mock",
+    "changedAt": "2026-06-11T12:00:00Z",
+    "linkedIncidentId": null,
+    "auditRequired": true
+  },
+  {
+    "id": "frf_008",
+    "key": "feature.customer_card.detail",
+    "featureName": "Customer Card detail view",
+    "module": "customer_card",
+    "state": "enabled",
+    "reason": "Normal mock state with reload-loop guard.",
+    "changedBy": "system_mock",
+    "changedAt": "2026-06-11T12:00:00Z",
+    "linkedIncidentId": null,
+    "auditRequired": true
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "key": "settings.request_categories",
+    "section": "Request Categories",
+    "label": "Request category configuration",
+    "status": "mock",
+    "local_domain_effect": "Defines category labels and default metadata",
+    "central_automation_link": null,
+    "risk_level_candidate": "none",
+    "ai_extension_candidate": false,
+    "feature_flag": "enable_request_crm_settings_shell"
+  },
+  {
+    "key": "settings.notification_type_labels",
+    "section": "Notification Type Labels",
+    "label": "Notification type labels",
+    "status": "mock",
+    "local_domain_effect": "Defines labels and display metadata only",
+    "central_automation_link": "automation_action_registry",
+    "risk_level_candidate": "medium",
+    "ai_extension_candidate": false,
+    "feature_flag": "enable_request_crm_settings_shell"
+  },
+  {
+    "key": "settings.ai_policy_placeholders",
+    "section": "AI Policy Placeholders",
+    "label": "AI extension references",
+    "status": "planned",
+    "local_domain_effect": "Displays AI modes per category/type as references",
+    "central_automation_link": "ai_action_extensions",
+    "risk_level_candidate": "medium",
+    "ai_extension_candidate": true,
+    "feature_flag": "enable_request_crm_automation_quick_review"
+  },
+  {
+    "key": "settings.runtime_safety_links",
+    "section": "Runtime Safety Links",
+    "label": "Runtime guard and incident visibility",
+    "status": "planned",
+    "local_domain_effect": "Displays mock runtime safety badges",
+    "central_automation_link": "runtime_guard_policies",
+    "risk_level_candidate": "high",
+    "ai_extension_candidate": false,
+    "feature_flag": "enable_request_crm_automation_quick_review"
+  }
+]

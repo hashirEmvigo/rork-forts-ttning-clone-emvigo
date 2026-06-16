@@ -1,0 +1,9 @@
+# Price Calculator - architecture index
+
+This folder contains Price Calculator documentation for the architecture category.
+
+See also: /docs/README-price-calculator-placement.md
+
+## Waves / ticket backlogs
+
+- calculator-library-wave-1.md — Calculator Library Wave 1 (reusable Questions + Add-ons): ordered, one-ticket-at-a-time backlog for the shared question/add-on library architecture.

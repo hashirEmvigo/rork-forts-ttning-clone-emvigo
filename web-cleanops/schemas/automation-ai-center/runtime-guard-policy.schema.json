@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RuntimeGuardPolicy",
+  "type": "object",
+  "required": [
+    "id",
+    "key",
+    "name",
+    "description",
+    "scope",
+    "triggerType",
+    "conditions",
+    "riskLevel",
+    "guardActions",
+    "safetyLimitKeys",
+    "incidentPolicy",
+    "alertPolicy",
+    "resolutionPolicy",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "key": { "type": "string", "pattern": "^runtime\\.guard\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "module": {
+      "enum": [
+        "schedule",
+        "cases",
+        "chat",
+        "notifications",
+        "keys_alarm",
+        "customer_card",
+        "work_orders",
+        "invoices",
+        "media",
+        "time_bank",
+        "agreements",
+        "employees",
+        "system",
+        null
+      ]
+    },
+    "scope": {
+      "enum": [
+        "session",
+        "user",
+        "company",
+        "role",
+        "module",
+        "route",
+        "endpoint",
+        "automation_action",
+        "background_job",
+        "ai_assistant",
+        "public_surface",
+        "system"
+      ]
+    },
+    "triggerType": {
+      "enum": [
+        "rate_limit_exceeded",
+        "resource_quota_exceeded",
+        "concurrent_limit_exceeded",
+        "retry_limit_exceeded",
+        "frontend_loop_detected",
+        "polling_frequency_exceeded",
+        "realtime_reconnect_storm_detected",
+        "timeout_threshold_exceeded",
+        "error_rate_threshold_exceeded",
+        "latency_threshold_exceeded",
+        "slow_query_detected",
+        "ai_quota_exceeded",
+        "upload_limit_exceeded",
+        "circuit_breaker_opened",
+        "dependency_health_failed",
+        "manual_kill_switch"
+      ]
+    },
+    "conditions": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "riskLevel": {
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "guardActions": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "log_only",
+          "throttle",
+          "limit_data",
+          "set_read_only",
+          "disable_feature",
+          "open_circuit",
+          "quarantine_session",
+          "block_request",
+          "create_incident",
+          "notify_it_team",
+          "notify_super_admin",
+          "require_manual_review",
+          "fallback_to_cached_or_empty_state"
+        ]
+      }
+    },
+    "safetyLimitKeys": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "runtimeFlagKey": {
+      "type": ["string", "null"]
+    },
+    "circuitBreakerKey": {
+      "type": ["string", "null"]
+    },
+    "incidentPolicy": {
+      "type": "object",
+      "required": ["createIncident", "updateExisting", "severity"],
+      "properties": {
+        "createIncident": { "type": "boolean" },
+        "updateExisting": { "type": "boolean" },
+        "dedupeWindowSeconds": { "type": ["integer", "null"], "minimum": 0 },
+        "severity": { "enum": ["info", "warning", "high", "critical"] }
+      },
+      "additionalProperties": true
+    },
+    "alertPolicy": {
+      "type": "object",
+      "required": ["alertTargets", "alertOnSeverities", "createFollowUpTask"],
+      "properties": {
+        "alertTargets": { "type": "array", "items": { "type": "string" } },
+        "alertOnSeverities": { "type": "array", "items": { "enum": ["info", "warning", "high", "critical"] } },
+        "createFollowUpTask": { "type": "boolean" },
+        "followUpOwner": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "resolutionPolicy": {
+      "type": "object",
+      "required": ["requiredForSeverities", "requiresResolutionNotes", "requiresRegressionCheck", "rollbackPlanRequired"],
+      "properties": {
+        "requiredForSeverities": { "type": "array", "items": { "enum": ["info", "warning", "high", "critical"] } },
+        "requiresResolutionNotes": { "type": "boolean" },
+        "requiresRegressionCheck": { "type": "boolean" },
+        "rollbackPlanRequired": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "status": {
+      "enum": ["draft", "planned", "active", "disabled", "deprecated"]
+    },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  },
+  "additionalProperties": true
+}

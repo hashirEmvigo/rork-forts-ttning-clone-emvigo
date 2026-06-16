@@ -1,0 +1,56 @@
+[
+  {
+    "key": "cancellation_rescheduling",
+    "label": "Cancellation / Rescheduling",
+    "category_id": "cat-customer-service",
+    "hard_coded": true
+  },
+  {
+    "key": "book_service",
+    "label": "Customer wants to book service",
+    "category_id": "cat-customer-service",
+    "hard_coded": true
+  },
+  {
+    "key": "complaint",
+    "label": "Complaint",
+    "category_id": "cat-customer-service",
+    "hard_coded": true
+  },
+  {
+    "key": "something_broke",
+    "label": "Something broke",
+    "category_id": "cat-worklead",
+    "hard_coded": true
+  },
+  {
+    "key": "customer_information",
+    "label": "Customer information",
+    "category_id": "cat-customer-service",
+    "hard_coded": true
+  },
+  {
+    "key": "invoice_question",
+    "label": "Invoice question",
+    "category_id": "cat-finance",
+    "hard_coded": true
+  },
+  {
+    "key": "general_message",
+    "label": "General message to office",
+    "category_id": null,
+    "hard_coded": true
+  },
+  {
+    "key": "payroll_question",
+    "label": "Payroll question",
+    "category_id": "cat-payroll",
+    "hard_coded": true
+  },
+  {
+    "key": "schedule_system_request",
+    "label": "Schedule system request",
+    "category_id": "cat-worklead",
+    "hard_coded": true
+  }
+]

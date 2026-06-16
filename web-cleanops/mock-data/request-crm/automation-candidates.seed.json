@@ -1,0 +1,194 @@
+[
+  {
+    "key": "request.customer_message_received",
+    "source_module": "request",
+    "trigger": "Customer-visible message created",
+    "conditions": [
+      "request is open",
+      "message sender is customer",
+      "request not closed"
+    ],
+    "risk_level": "medium",
+    "guard_action": "notify owner/support and unsnooze if needed",
+    "runtime_flags": [
+      "enable_request_platform",
+      "enable_notification_center"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "mark requires_attention",
+      "unsnooze request",
+      "create notification candidate"
+    ],
+    "ai_extension_candidate": true,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "render quick-review only"
+  },
+  {
+    "key": "request.sla_due_soon",
+    "source_module": "request",
+    "trigger": "SLA due soon",
+    "conditions": [
+      "request not closed",
+      "sla_due_at within threshold"
+    ],
+    "risk_level": "high",
+    "guard_action": "create prio dashboard/notification candidate",
+    "runtime_flags": [
+      "enable_request_platform"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "create dashboard item",
+      "create notification candidate"
+    ],
+    "ai_extension_candidate": true,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "mock badge only"
+  },
+  {
+    "key": "request.access_requested",
+    "source_module": "request",
+    "trigger": "Admin requests access to locked request",
+    "conditions": [
+      "request is locked",
+      "requesting admin lacks content access"
+    ],
+    "risk_level": "high",
+    "guard_action": "notify owner/support; escalate on timeout",
+    "runtime_flags": [
+      "enable_locked_requests",
+      "enable_notification_center"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "create access request",
+      "create notification to owner/support"
+    ],
+    "ai_extension_candidate": false,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "mock notification only"
+  },
+  {
+    "key": "chat.ai_unable_to_resolve",
+    "source_module": "chat",
+    "trigger": "Mock/AI reports cannot solve chat",
+    "conditions": [
+      "chat open",
+      "no active admin takeover",
+      "policy allows request draft"
+    ],
+    "risk_level": "medium",
+    "guard_action": "create request draft or notify admin according to central policy",
+    "runtime_flags": [
+      "enable_chat",
+      "enable_ai_mock"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "create request draft",
+      "attach transcript",
+      "notify category group"
+    ],
+    "ai_extension_candidate": true,
+    "owner_module": "chat",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "render mock draft state only"
+  },
+  {
+    "key": "internal_task.comment_created",
+    "source_module": "request",
+    "trigger": "Comment on internal task",
+    "conditions": [
+      "comment author is not the only assignee",
+      "task has assignees"
+    ],
+    "risk_level": "low",
+    "guard_action": "notify task assignees",
+    "runtime_flags": [
+      "enable_request_manager"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "set unread for assignees",
+      "create notification candidate"
+    ],
+    "ai_extension_candidate": false,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "render acknowledgement chips"
+  },
+  {
+    "key": "email.delivery_failed",
+    "source_module": "request",
+    "trigger": "Email outbox job failed persistently",
+    "conditions": [
+      "delivery attempts exceed threshold",
+      "message is customer-visible"
+    ],
+    "risk_level": "medium",
+    "guard_action": "create system warning and incident candidate",
+    "runtime_flags": [
+      "enable_email_outbound"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "create notification candidate",
+      "write audit event",
+      "flag delivery status failed"
+    ],
+    "ai_extension_candidate": false,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "mock warning only"
+  },
+  {
+    "key": "request.owner_inactive_on_handle_self",
+    "source_module": "request",
+    "trigger": "Handled-by-owner-only request owner inactive",
+    "conditions": [
+      "handled_by_owner_only true",
+      "owner inactive or absent",
+      "request open"
+    ],
+    "risk_level": "high",
+    "guard_action": "create supervisor review candidate",
+    "runtime_flags": [
+      "enable_request_handle_self"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "create dashboard item",
+      "create notification candidate"
+    ],
+    "ai_extension_candidate": true,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "mock dashboard item"
+  },
+  {
+    "key": "request.emergency_created",
+    "source_module": "request",
+    "trigger": "Emergency request created",
+    "conditions": [
+      "severity emergency"
+    ],
+    "risk_level": "critical",
+    "guard_action": "emergency popup/ack flow according to central policy",
+    "runtime_flags": [
+      "enable_emergency_popup"
+    ],
+    "execution_mode": "planned_mock",
+    "base_actions": [
+      "create emergency notification",
+      "require acknowledgement"
+    ],
+    "ai_extension_candidate": false,
+    "owner_module": "request",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "mock emergency card only"
+  }
+]

@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AutomationAction",
+  "type": "object",
+  "required": [
+    "id",
+    "key",
+    "name",
+    "description",
+    "module",
+    "ownerDomain",
+    "trigger",
+    "conditions",
+    "actions",
+    "status",
+    "riskLevel",
+    "executionMode",
+    "approvalPolicy",
+    "supportsAi",
+    "aiEnabled",
+    "version",
+    "tags"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "ownerDomain": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "object"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "planned",
+        "active",
+        "disabled",
+        "deprecated"
+      ]
+    },
+    "riskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "executionMode": {
+      "enum": [
+        "observe_only",
+        "auto_execute_with_log",
+        "auto_execute_with_notification",
+        "requires_admin_review",
+        "requires_company_admin_approval",
+        "requires_super_admin_approval",
+        "blocked"
+      ]
+    },
+    "approvalPolicy": {
+      "type": "object"
+    },
+    "supportsAi": {
+      "type": "boolean"
+    },
+    "aiEnabled": {
+      "type": "boolean"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "latestRunAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "updatedAt": {
+      "type": "string"
+    },
+    "resourceProfile": {
+      "enum": [
+        "light",
+        "medium",
+        "heavy",
+        "critical"
+      ]
+    },
+    "safetyLimitKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featureFlagKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "circuitBreakerKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timeoutMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "maxRetries": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "runtimeGuardPolicyKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

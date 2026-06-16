@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AiActionExtension",
+  "type": "object",
+  "required": [
+    "id",
+    "automationActionKey",
+    "assistantKey",
+    "aiMode",
+    "allowedOutputs",
+    "requiredContext",
+    "approvalPolicy",
+    "enabled"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "automationActionKey": {
+      "type": "string"
+    },
+    "assistantKey": {
+      "type": "string"
+    },
+    "aiMode": {
+      "enum": [
+        "none",
+        "summarize_only",
+        "suggest_only",
+        "draft_only",
+        "prepare_approval",
+        "limited_auto_execute"
+      ]
+    },
+    "allowedOutputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requiredContext": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "approvalPolicy": {
+      "type": "object"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "modelConfigKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "promptVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requestBudgetKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tokenBudgetKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timeoutMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "maxRetries": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "providerCircuitBreakerKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,2501 @@
+REQUEST / CRM / Kommunikationsplattform
+
+Teknisk arkitektur och implementationsunderlag till RORK
+
+Ärendehanterare + Chatt + Notifikationscenter + AI-assistent
+
+Version: 0.1Status: Arkitektur- och beslutsutkastDatum: 2026-06-09Målgrupp: RORK / teknisk implementation
+
+Kort instruktion till RORKDokumentet ska behandlas som ett tekniskt arkitekturunderlag, inte som en färdig implementeringsplan. Ta fram en konkret implementation plan med datamodell, migrations, API-kontrakt, komponentstruktur, feature flags, testplan, risker och byggordning. Prioritera korrekt arkitektur före snabb release.
+
+Innehåll
+
+1. Executive summary och målbild
+
+2. Betyg och produktbedömning
+
+3. Scope, non-goals och release-strategi
+
+4. Arkitekturprinciper
+
+5. Systemöversikt och modulindelning
+
+6. Domain model / datamodell
+
+7. Ärendehanteraren
+
+8. Kommunikationsslingor och synlighet
+
+9. Interna arbetsuppgifter och interna inlägg
+
+10. Snooze, handlägg själv och låsta ärenden
+
+11. Notifikationscenter
+
+12. Chatt och AI-intake
+
+13. AI Assistant Layer
+
+14. E-post, leverans och inkommande svar
+
+15. Dashboard och operativa avvikelser
+
+16. Kopplingar till andra moduler
+
+17. Behörighet, säkerhet och audit
+
+18. Event-driven design och automation
+
+19. Settings / konfiguration
+
+20. Teststrategi, testdata och datarensning
+
+21. Feature flags och miljöstrategi
+
+22. API-kontrakt och service boundaries
+
+23. Implementation phases
+
+24. Acceptance tests / Definition of Done
+
+25. Risker, öppna frågor och rekommendationer
+
+26. RORK-uppdrag
+
+27. Referenser
+
+1. Executive summary och målbild
+
+MålbildBygg en intern REQUEST Platform som blir systemets centrala kommunikations- och operationslager. Plattformen ska hantera ärenden, chatt, notifikationer, AI-intake, intern samordning, e-postersättning, behörighet och operativ kontroll. Kunder och medarbetare ska inte bjudas in förrän helheten är färdigbyggd, testad med realistisk testdata och produktionsdata är rensad från testtransaktioner.
+
+REQUEST ska inte implementeras som ett traditionellt support-ticket-system. Plattformen ska byggas som en modulär kommunikationsplattform med en gemensam domain model för ärenden, meddelanden, trådar, notifikationer, chatt, AI-förslag, interna arbetsuppgifter, lässtatus, audit och behörighet.
+
+Huvudmål
+
+Ersätta e-post och stora delar av telefonhantering för kund- och medarbetarkommunikation.
+
+Ge admin och arbetsledning en operativ kontrollvy över pågående kommunikation, avvikelser och kritiska händelser.
+
+Ge kunder och medarbetare en kontrollerad väg in via AI-chatt, kategoriserade ärenden och portalkommunikation.
+
+Stödja intern samordning i samma ärende via arbetsuppgifter, interna kommentarer och individuella läs-/bekräftelsestatusar.
+
+Förbereda för AI-driven intake, kategorisering, sammanfattning, svarsförslag och senare reglerad automation.
+
+Strategiskt beslut
+
+Ärendehanteraren, chatten och notifikationscentret ska byggas under samma arkitektur innan extern lansering.
+
+Implementation ska ändå göras stegvis, med feature flags och vertikala testflöden.
+
+AI ska designas från dag ett men kopplas på med mock-adapter först och riktig API-integration först när kärnflödena är stabila.
+
+REQUEST Platform|-- Request Manager: långlivade ärenden, ansvar, historik och SLA|-- Notification Center: operativa signaler, prio, emergency och åtkomstförfrågningar|-- Chat: AI-first intake, live admin takeover och eskalering till ärende|-- Dashboard: saker att se över, avvikelser och kontrollvyer|-- AI Assistant Layer: mock först, provider-adapter senare, tool-baserade actions
+
+2. Betyg och produktbedömning
+
+Område
+
+Betyg
+
+Teknisk kommentar
+
+Produktidé
+
+9.5/10
+
+Stark verksamhetsnära lösning. REQUEST blir ett operativt nav, inte bara en inbox.
+
+Affärsvärde
+
+10/10
+
+Kan minska e-post, telefonkö, missade interna uppgifter och otydligt ansvar.
+
+Ärendehanterare
+
+9.5/10
+
+Container-modell med trådar, interna tasks, metadata, owner/support/category är rätt.
+
+Chatt / AI-intake
+
+9/10
+
+AI-first kanal är rätt, men ska börja i mock/suggestion mode.
+
+Notifikationscenter
+
+8.5/10
+
+Högt värde, men måste starta enkelt och byggas mot skalbar regelmotor senare.
+
+Intern task management
+
+9.5/10
+
+Mycket stark funktion: tasks per ärende med tilldelning och individuella acknowledgements.
+
+Synlighet / access
+
+8.5/10
+
+Nödvändigt men komplext. Kräver strikt modellering och audit.
+
+E-postintegration
+
+9/10
+
+Utgående mail bör byggas tidigt; inkommande reply-to bör byggas kontrollerat senare.
+
+MVP-risk om allt byggs som big bang
+
+Hög
+
+Måste göras med feature flags, mock services, staging och testbatchar.
+
+Genomförbarhet om fasat men ej externt släppt
+
+9/10
+
+Rätt strategi: intern fasad implementation, extern release först när helheten är stabil.
+
+ArkitekturrekommendationBygg hela plattformen under samma tekniska arkitektur, men inte som ett big-bang-implementation. Implementera i kontrollerade byggblock med feature flags, testdata och staging-flöden. Extern release först efter full regressionstestning.
+
+3. Scope, non-goals och release-strategi
+
+3.1 Scope
+
+Ärendehanterare för admin, kund, medarbetare, system och AI.
+
+Chatt med AI-assistent som primär intake-kanal för kund/medarbetare.
+
+Notifikationscenter för systemhändelser, prio, emergency och informationsnotiser.
+
+Interna arbetsuppgifter och interna inlägg inom ärenden.
+
+Behörighetsmodell med owner, support, category, locked access, preview och request access.
+
+Snooze/dölj-logik, handlägg själv/dölj för kollegor och låsta ärenden.
+
+E-postnotifiering, fördröjd skicklogik och förberedd inbound email-reply-funktion.
+
+Testmode, seed data, test batch cleanup och miljöstrategi.
+
+AI-service med mock-adapter först och provider-adapter senare.
+
+3.2 Non-goals i första tekniska scope
+
+Full visuell regelmotor i settings från start.
+
+Full autonom AI som stänger ärenden utan admin-godkännande.
+
+Full avboknings-/ombokningsmotor med schema- och fakturapåverkan från första iterationen.
+
+Full livechat-routing med avancerad köhantering från första iterationen.
+
+Extern lansering till kund/medarbetare innan modulen är testad end-to-end.
+
+3.3 Release-strategi
+
+Bygg allt internt före extern lansering.
+
+Använd feature flags så att funktioner kan byggas och testas utan att aktiveras globalt.
+
+Använd staging/test-tenant med realistisk testdata.
+
+Rensa testdata via script/test batch cleanup innan produktionsexponering.
+
+Anslut AI API först efter att mock-AI-flöden fungerar med chatt, ärende, notifikationer och admin approval.
+
+4. Arkitekturprinciper
+
+Princip
+
+Teknisk innebörd
+
+Motivering
+
+Single communication domain
+
+Ärenden, chat, notiser och meddelanden delar gemensamma kärnobjekt där det är möjligt.
+
+Undviker tre separata kommunikationssystem.
+
+Request as container
+
+Ett ärende är en container för trådar, interna posts, tasks, system events, AI-sammanfattningar och metadata.
+
+Skalbart för komplexa ärenden med flera parter.
+
+Event-driven core
+
+SystemEvent skapas av moduler och mappas via rules till notification, dashboard item, task eller request.
+
+Separera händelser från åtgärder.
+
+RBAC + ABAC
+
+Roller kombineras med attribut: owner, support, category, participant, lock state, tenant, sensitivity.
+
+Krävs för låsta ärenden och begränsad synlighet.
+
+Audit everything
+
+Alla statusbyten, access events, AI actions, mail sends, snooze och visibility changes loggas.
+
+Spårbarhet, felsökning och ansvar.
+
+Mock-first AI
+
+AI-service implementeras med mock-adapter innan riktig provider kopplas på.
+
+Testa systemlogik utan AI-osäkerhet.
+
+Provider isolation
+
+Systemet ska prata med Internal AI Service, inte OpenAI direkt från varje modul.
+
+Bytbar provider, bättre loggning, policy och fallback.
+
+Outbox pattern
+
+E-post och externa notifieringar bör skickas via queue/outbox, inte direkt i request transaction.
+
+Robust leverans, retries och audit.
+
+Feature flags
+
+Varje större funktion aktiveras via flagg per miljö/tenant/roll.
+
+Säker intern testning före release.
+
+No silent hiding
+
+Snooze/hidden får aldrig dölja obekräftade eller tidskritiska uppgifter från ansvariga.
+
+Förhindrar att ärenden faller mellan stolarna.
+
+5. Systemöversikt och modulindelning
+
+External actors  Customer Portal       Employee Portal       Admin UI       |                     |                  |       +----------+----------+----------+-------+                  |                     |             REQUEST Platform Application Layer                  |  +---------------+---------------+---------------+  | Request Manager | Chat Service | Notification Center |  +---------------+---------------+---------------+                  |       Communication / Event / Access Core                  |  +-------+--------+--------+--------+--------+--------+  | CRM   | Staff  | Booking| WorkOrder|Invoice|Schedule|  +-------+--------+--------+--------+--------+--------+                  |        AI Orchestration Layer + Email Outbox + Audit Log
+
+Request Manager
+
+Hanterar ärenden, interna tasks, externa trådar, ägare, support, kategori, SLA, status och historik.
+
+Ersätter mejl som primär kommunikationsyta.
+
+Notification Center
+
+Tar emot system events och skapar information, prio eller emergency-notiser.
+
+Kan skapa ärende från notis men ska inte automatiskt göra alla händelser till ärenden.
+
+Chat
+
+AI-first intake för kund/medarbetare.
+
+Kan övergå till admin takeover eller skapa ärende när AI inte kan lösa frågan.
+
+Dashboard / saker att se över
+
+Visar operativa avvikelser som inte nödvändigtvis är ärenden.
+
+Exempel: ej tilldelade ärenden, bokning saknar personal, förfallna SLA, åtkomstbegäran.
+
+6. Domain model / datamodell
+
+DatamodellprincipRORK ska föreslå slutlig fysisk datamodell och migrationsordning. Nedan är en rekommenderad logisk domain model som implementationen ska utgå från.
+
+Request
+
+Huvudobjektet. Representerar ett ärende som kan innehålla externa trådar, interna posts, tasks, systemhändelser och AI-data.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid / bigint
+
+Primärnyckel.
+
+request_number
+
+string
+
+Mänskligt läsbart ärendenummer, t.ex. REQ-5551.
+
+tenant_id / company_id
+
+uuid
+
+SaaS-/bolagsavgränsning.
+
+title
+
+string
+
+Rubrik. Kan genereras av AI eller admin.
+
+description
+
+text
+
+Initial sammanfattning eller adminbeskrivning.
+
+category_id
+
+nullable fk
+
+Kan saknas för Mina ärenden utan kategori.
+
+subcategory_id
+
+nullable fk
+
+Underkategori.
+
+status
+
+enum/fk
+
+Nytt, Öppet, Pågår, Väntar på kund, Väntar internt, Löst, Stängt, Återöppnat.
+
+priority
+
+enum
+
+Low / Normal / High. Prioritet är inte samma som emergency.
+
+severity
+
+enum
+
+Normal / Prio / Emergency. Styr popup/routing.
+
+owner_admin_id
+
+nullable fk
+
+Huvudansvarig admin. Om null ska ärendet visas i Ej tilldelade.
+
+customer_id
+
+nullable fk
+
+Max en ansluten kund.
+
+source
+
+enum
+
+admin, customer_portal, employee_portal, chat, ai, system, email.
+
+sla_due_at
+
+datetime nullable
+
+När ärendet kräver respons eller lösning.
+
+requires_attention
+
+boolean
+
+Intern flagga som styr listor och dashboard.
+
+is_locked
+
+boolean
+
+Begränsar access till innehåll.
+
+is_system_locked_thread
+
+boolean
+
+För systemärenden där events ska aggregeras i samma ärende.
+
+closed_at
+
+datetime nullable
+
+När ärendet stängdes.
+
+created_by_user_id
+
+nullable fk
+
+Admin/kund/medarbetare om relevant.
+
+created_by_actor_type
+
+enum
+
+admin, customer, employee, system, ai.
+
+created_at / updated_at
+
+datetime
+
+Timestamps.
+
+RequestCategory
+
+Konfigurerbar kategori/grupp som styr routing, behörighet, vyer och SLA defaults.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+tenant_id
+
+uuid
+
+Bolagsspecifik kategori.
+
+name
+
+string
+
+Exempel: Kundtjänst, Ekonomi, Arbetsledning, Personal & lön.
+
+is_system
+
+boolean
+
+Hårdkodad/systemkategori eller adminskapad.
+
+default_owner_strategy
+
+enum
+
+none, group_queue, round_robin, area_lead, named_admin.
+
+default_priority
+
+enum
+
+Default prioritet.
+
+default_sla_minutes
+
+int nullable
+
+Default SLA.
+
+email_policy
+
+enum
+
+email_allowed, notify_only, portal_only, disabled.
+
+ai_policy_id
+
+fk nullable
+
+Styr AI-rättigheter för kategori.
+
+visibility_policy_id
+
+fk nullable
+
+Styr vilka roller/grupper som kan se kategorin.
+
+active
+
+boolean
+
+Aktiv/inaktiv.
+
+RequestParticipant
+
+Kopplar externa och interna deltagare till ärende.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+request_id
+
+fk
+
+Ärende.
+
+actor_type
+
+enum
+
+admin, customer, employee, ai, system.
+
+actor_id
+
+uuid/string
+
+ID för aktör.
+
+role_in_request
+
+enum
+
+owner, support, watcher, customer, employee, ai_agent, system.
+
+can_read
+
+boolean
+
+Grundaccess. Finmaskig access styrs även per tråd/meddelande.
+
+can_write
+
+boolean
+
+Skrivaccess.
+
+notify_on_external_message
+
+boolean
+
+Notis vid nytt kund-/medarbetarmeddelande.
+
+notify_on_internal_task
+
+boolean
+
+Notis vid interna tasks.
+
+added_by
+
+fk nullable
+
+Vem lade till deltagaren.
+
+created_at
+
+datetime
+
+Timestamp.
+
+RequestThread
+
+Separat kommunikationsslinga i ett ärende. Förhindrar att kund och medarbetare ser fel innehåll.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+request_id
+
+fk
+
+Ärende.
+
+thread_type
+
+enum
+
+customer, employee, shared_customer_employee, internal, ai_intake.
+
+title
+
+string
+
+Exempel: Konversation med kund.
+
+visibility_scope
+
+json/enum
+
+Vilka actor types / actors som får se tråden.
+
+created_by_actor_type
+
+enum
+
+admin, customer, employee, ai, system.
+
+created_at
+
+datetime
+
+Timestamp.
+
+archived_at
+
+datetime nullable
+
+Arkivering av tråd, inte ärende.
+
+RequestMessage
+
+Meddelande i extern eller intern tråd.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+thread_id
+
+fk
+
+Tråd.
+
+request_id
+
+fk
+
+Denormaliseras för query performance.
+
+sender_actor_type
+
+enum
+
+admin, customer, employee, ai, system.
+
+sender_actor_id
+
+uuid/string nullable
+
+Avsändare.
+
+body
+
+text
+
+Meddelandetext.
+
+visibility_scope
+
+json/enum
+
+Kopia från tråd eller override före skick.
+
+delivery_channel
+
+enum
+
+portal, email, chat, system.
+
+email_delivery_status
+
+enum nullable
+
+pending, sent, paused, disabled, failed.
+
+is_ai_generated
+
+boolean
+
+AI-genererat eller AI-assisterat.
+
+ai_action_log_id
+
+fk nullable
+
+Spårbarhet till AI-output.
+
+created_at
+
+datetime
+
+Timestamp.
+
+edited_at
+
+datetime nullable
+
+Endast interna/adminregler. Externa meddelanden bör inte ändra synlighet i efterhand.
+
+InternalPost
+
+Intern yta i vänster kolumn: anteckning, telefonsamtal, arbetsuppgift, AI summary m.m.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+request_id
+
+fk
+
+Ärende.
+
+post_type
+
+enum/fk
+
+task, phone_call, note, ai_summary, system_note eller konfigurerad typ.
+
+title
+
+string
+
+Rubrik.
+
+body
+
+text
+
+Innehåll.
+
+created_by_admin_id
+
+nullable fk
+
+Admin eller system/AI.
+
+is_task
+
+boolean
+
+True för hårdkodad arbetsuppgift.
+
+task_status
+
+enum nullable
+
+open, in_progress, done, cancelled.
+
+due_at
+
+datetime nullable
+
+Deadline per post/task.
+
+created_at / updated_at
+
+datetime
+
+Timestamps.
+
+InternalPostAssignee
+
+Tilldelning och bekräftelse per intern post eller arbetsuppgift.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+internal_post_id
+
+fk
+
+Intern post/task.
+
+admin_id
+
+fk
+
+Tilldelad admin.
+
+assignment_role
+
+enum
+
+owner, co_owner, reviewer, watcher.
+
+is_acknowledged
+
+boolean
+
+Grön/blå logik.
+
+acknowledged_at
+
+datetime nullable
+
+När admin klickade in och bekräftade.
+
+last_read_comment_id
+
+fk nullable
+
+Finmaskig lässtatus.
+
+created_at
+
+datetime
+
+Timestamp.
+
+Notification
+
+Operativ notis. Ska inte blandas ihop med ärende.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+tenant_id
+
+uuid
+
+Bolag.
+
+notification_type_id
+
+fk
+
+Typ från settings.
+
+severity
+
+enum
+
+information, prio, emergency.
+
+title
+
+string
+
+Kort titel.
+
+body
+
+text
+
+Detaljtext.
+
+status
+
+enum
+
+unread, read, acknowledged, handled, dismissed.
+
+source_event_id
+
+fk nullable
+
+SystemEvent som skapade notisen.
+
+linked_request_id
+
+fk nullable
+
+Om notisen länkar till ärende.
+
+linked_object_type/id
+
+string/uuid nullable
+
+customer, employee, booking, invoice, work_order etc.
+
+assigned_group_id
+
+fk nullable
+
+Grupp/roll som ska se notisen.
+
+assigned_admin_id
+
+fk nullable
+
+Specifik admin.
+
+requires_action
+
+boolean
+
+Behöver hanteras.
+
+created_at / handled_at
+
+datetime
+
+Timestamps.
+
+ChatSession
+
+Chatt som kan vara AI-only, admin takeover eller eskaleras till ärende.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+tenant_id
+
+uuid
+
+Bolag.
+
+actor_type
+
+enum
+
+customer, employee, admin.
+
+actor_id
+
+uuid
+
+Kund/medarbetare/admin.
+
+status
+
+enum
+
+open, ai_handling, waiting_for_admin, admin_takeover, converted_to_request, closed.
+
+linked_request_id
+
+fk nullable
+
+Skapat/kopplat ärende.
+
+ai_mode
+
+enum
+
+mock, suggestion, assisted, autonomous_limited.
+
+assigned_admin_id
+
+fk nullable
+
+Vid live takeover.
+
+created_at / closed_at
+
+datetime
+
+Timestamps.
+
+AIActionLog
+
+All AI-output och alla AI-action-försök ska loggas.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+tenant_id
+
+uuid
+
+Bolag.
+
+source_type
+
+enum
+
+chat, request, notification, dashboard, email.
+
+source_id
+
+uuid
+
+Källa.
+
+action_type
+
+enum
+
+classify, summarize, suggest_reply, create_request_draft, create_task_draft, escalate, close_suggestion.
+
+input_snapshot_ref
+
+json/ref
+
+Sanerad snapshot av input/context.
+
+output_json
+
+json
+
+Strukturerad AI-output.
+
+provider
+
+string
+
+mock, openai, other.
+
+model
+
+string nullable
+
+Modellnamn när provider används.
+
+status
+
+enum
+
+proposed, accepted, rejected, executed, failed.
+
+approved_by_admin_id
+
+nullable fk
+
+Admin approval.
+
+created_at
+
+datetime
+
+Timestamp.
+
+RequestSnooze
+
+Tillfällig listdöljning. Detta är inte access control.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+request_id
+
+fk
+
+Ärende.
+
+scope
+
+enum
+
+personal, global.
+
+user_id
+
+fk nullable
+
+Sätts för personal snooze.
+
+snoozed_until
+
+datetime
+
+När ärendet ska visas igen.
+
+reason
+
+enum/text nullable
+
+Väntar på kund, väntar internt, annat.
+
+created_by_admin_id
+
+fk
+
+Vem dolde.
+
+auto_unsnoozed_reason
+
+nullable enum
+
+new_message, sla_due, emergency, task_assigned, expired.
+
+active
+
+boolean
+
+Aktiv/inaktiv.
+
+AccessRequest
+
+Begäran om åtkomst till låst ärende.
+
+Field
+
+Type / värde
+
+Kommentar
+
+id
+
+uuid
+
+Primärnyckel.
+
+request_id
+
+fk
+
+Låst ärende.
+
+requested_by_admin_id
+
+fk
+
+Admin som begär åtkomst.
+
+owner_admin_id
+
+fk nullable
+
+Mottagare, vanligtvis ägare.
+
+requested_access_level
+
+enum
+
+read, support, owner_transfer.
+
+status
+
+enum
+
+pending, approved, denied, expired, overridden.
+
+decision_by_admin_id
+
+fk nullable
+
+Vem godkände/nekade.
+
+decision_reason
+
+text nullable
+
+Valfri/obligatorisk enligt settings.
+
+created_at / decided_at
+
+datetime
+
+Timestamps.
+
+7. Ärendehanteraren
+
+DefinitionÄrendehanteraren är systemets långlivade kommunikations- och ansvarslager. Den ersätter e-post som arbetsyta, inte bara som meddelandekanal.
+
+7.1 Hårdkodade ärendetyper från start
+
+Avbokning / Ombokning
+
+Kund vill boka tjänst [vald tjänst]
+
+Reklamation
+
+Något har gått sönder
+
+Kundinformation
+
+Fakturafråga
+
+Ställ en fråga / generellt meddelande
+
+Fråga om lön
+
+Schema - samlat systemärende för schemarelaterade ändringar
+
+Utöver hårdkodade ärendetyper ska admin kunna skapa egna ärendetyper/kategorier i settings. Full dynamisk formulärbyggare behöver inte vara första iterationen, men datamodellen ska inte blockera typ-specifika metadata senare.
+
+7.2 Ärendevy: trekolumnslayout
+
+Kolumn
+
+Innehåll
+
+Teknisk funktion
+
+Vänster: Intern yta
+
+Intern kommunikation, arbetsuppgifter, telefonsamtal, anteckningar, AI summary, interna kommentarer.
+
+Endast admin/behörig intern personal. Har egna posts, task-assignees och acknowledgement-status.
+
+Mitten: Extern kommunikation
+
+Konversation med kund, medarbetare, kund+medarbetare eller AI.
+
+Flera RequestThreads med tydlig visibility_scope. Admin ska se mottagare innan meddelande skickas.
+
+Höger: Ärendeinformation
+
+Kategori, status, prioritet, severity, SLA, kund, medarbetare, ägare, support, bokning, faktura, AO, snooze, låsning, e-postpolicy.
+
+Metadata och actions. Här ligger knappar för snooze, handlägg själv, låsning, access och e-postinställningar.
+
+7.3 Skapa ärende
+
+Alla aktörer kan skapa ärenden: admin, kund, medarbetare, system och AI.
+
+Alla aktörer har olika behörighet och olika synliga kategorier.
+
+Kund/medarbetare ska kunna välja ärendetyp eller välja "Skicka meddelande till kontoret".
+
+Om kunden väljer "Skicka meddelande till kontoret" ska AI-intake starta utan initial kategori/prioritet.
+
+AI ska samla kontext, ställa följdfrågor, föreslå kategori, prioritet, summary och tasks.
+
+Om AI kan lösa ärendet ska admin i början kunna godkänna stängning och läsa konversationen innan slutlig closure.
+
+Om AI inte kan lösa ärendet ska AI skapa ärendeutkast eller ärende enligt policy.
+
+7.4 Kopplingar på ärendet
+
+customer_id: max en kund per ärende.
+
+employee_ids: en eller flera medarbetare, t.ex. städpersonal.
+
+support_admin_ids: en eller flera admin/arbetsledare.
+
+owner_admin_id: huvudansvarig, rekommenderat max en ägare.
+
+booking_id: valfri koppling till bokning.
+
+work_order_id: valfri koppling till arbetsorder.
+
+invoice_id: valfri koppling till faktura.
+
+media_attachment_ids: filer/bilder.
+
+source_event_id: systemhändelse som skapade ärendet.
+
+chat_session_id: om ärendet kommer från chatt.
+
+7.5 Status, priority, severity och SLA
+
+Begrepp
+
+Rekommenderade värden
+
+Får inte blandas ihop med
+
+Status
+
+Nytt, Öppet, Pågår, Väntar på kund, Väntar på medarbetare, Väntar internt, Åtgärd planerad, Löst, Stängt, Återöppnat.
+
+Status är inte priority eller emergency.
+
+Priority
+
+Low, Normal, High.
+
+Priority anger verksamhetsvikt, inte nödvändigtvis akut UI-popup.
+
+Severity
+
+Normal, Prio, Emergency.
+
+Severity styr prio-routing, färg och popup.
+
+SLA/deadline
+
+Respond due, resolve due, internal task due.
+
+SLA styr förfall och prioriterade vyer.
+
+8. Kommunikationsslingor och synlighet
+
+KärnregelEtt ärende kan innehålla flera externa kommunikationsslingor. Kund och medarbetare ska som default inte se varandras trådar. Gemensam tråd ska kräva aktivt val av admin eller explicit systemregel.
+
+Trådtyp
+
+Synlig för
+
+Användning
+
+customer
+
+Admin + specifik kund
+
+Kunddialog. Kunden ser denna tråd i portal och via e-post.
+
+employee
+
+Admin + specifik medarbetare
+
+Medarbetardialog. Kunden ser inte denna.
+
+shared_customer_employee
+
+Admin + kund + en/flera medarbetare
+
+Endast när admin aktivt vill att båda parter ska se samma dialog.
+
+internal
+
+Admin/support/ägare enligt access
+
+Intern kommunikation. Ska inte visas för kund/medarbetare.
+
+ai_intake
+
+AI + kund/medarbetare, senare admin
+
+Intake-konversation som kan sammanfattas till ärende.
+
+Admin UI måste visa mottagare innan skick: "Detta skickas till Anna Andersson" eller "Internt - syns inte för kund/medarbetare".
+
+Externa meddelandens synlighet ska inte kunna ändras i efterhand utan särskild audit och admin-behörighet. Rekommendation: blockera ändring av extern visibility efter skick.
+
+Kund ser endast kundsynliga trådar, kundsynliga bilagor och förenklad status.
+
+Medarbetare ser endast medarbetarsynliga trådar och förenklad status.
+
+Admin ser alla trådar inom access scope.
+
+9. Interna arbetsuppgifter och interna inlägg
+
+ProduktvärdeDet interna fältet i ärendet ska fungera som ett mini-task-system. Detta är en av de högst värderade funktionerna och ska inte reduceras till vanliga anteckningar.
+
+9.1 Inläggstyper
+
+Arbetsuppgift ska vara hårdkodad post_type eftersom den kräver assignment, status, kommentartråd och acknowledgements.
+
+Telefonsamtal, anteckning och andra inläggstyper ska kunna läggas till i settings senare.
+
+AI-sammanfattning och systemnotering kan vara systemgenererade interna posts.
+
+9.2 Task assignment och acknowledgement
+
+Request 5551  InternalPost: Arbetsuppgift 1 - Ring kund    Assignees: Sebastian    Comments: ...  InternalPost: Arbetsuppgift 2 - Uppdatera städprotokoll    Assignees: none -> visas som otilldelad  InternalPost: Arbetsuppgift 3 - Uppdatera AO-anteckningar    Assignees: Marcus, Sebastian    Acknowledgement:      Marcus = blue / not acknowledged      Sebastian = green / acknowledged
+
+Kommentar på arbetsuppgift ska notifiera tilldelade admin på just den arbetsuppgiften.
+
+Om Sebastian är ensam tilldelad på Arbetsuppgift 1 och Sebastian svarar, ska ingen annan notifieras.
+
+Om Sebastian vill involvera Marcus ska Sebastian kunna lägga till Marcus via plusikon på arbetsuppgiften.
+
+När Marcus läggs till får Marcus notis och arbetsuppgiften blir obekräftad för Marcus.
+
+Att öppna ärendet ska inte automatiskt markera interna arbetsuppgifter som lästa. Admin måste öppna/klicka relevant post.
+
+9.3 Read states
+
+Nivå
+
+Trigger
+
+Konsekvens
+
+Request unread
+
+Kund/medarbetare skriver i extern tråd.
+
+Ärendet markeras med nytt meddelande. När en admin öppnar kan extern oläst status markeras läst för supportgruppen enligt vald policy.
+
+Message unread
+
+Specifikt meddelande får oläst status.
+
+Admin ska kunna markera specifikt meddelande som oläst manuellt.
+
+Internal task unread
+
+Kommentar på intern task riktad till assignee.
+
+Endast assignees får unread/notification. Kräver klick på posten för acknowledgement.
+
+Acknowledgement
+
+Admin bekräftar intern post/task.
+
+Admin blir grön. Andra assignees kan fortsatt vara blå.
+
+10. Snooze, handlägg själv och låsta ärenden
+
+Viktigt begreppsbeslutDessa funktioner får inte blandas ihop. Snooze är listfiltrering. Handlägg själv är aktivt ägarskap/arbetsfördelning. Låst ärende är access control.
+
+10.1 Snooze / Dölj tillfälligt
+
+Action
+
+Scope
+
+Regel
+
+Dölj för mig
+
+Personal
+
+Ärendet döljs från mina aktiva listor till valt datum/tid.
+
+Dölj för alla
+
+Global
+
+Ärendet döljs från vanliga aktiva listor för alla som inte har aktivt ansvar/oläst task. Behörighetsstyrt.
+
+Quick hide
+
+Global
+
+Snabbkommando: dölj för alla i 2 dagar. Samma undantagsregler som global snooze.
+
+Visa dolda ärenden
+
+UI-filter
+
+Admin kan när som helst visa dolda/snoozade ärenden.
+
+Snabbval: 1 dag, 2 dagar, 3 dagar, 1 vecka, custom time interval.
+
+Nytt kund-/medarbetarmeddelande ska automatiskt unsnooza ärendet.
+
+SLA/deadline som närmar sig ska unsnooza ärendet.
+
+Emergency severity ska unsnooza ärendet.
+
+Snooze får inte dölja ärendet för admin som har obekräftad arbetsuppgift eller oläst intern post riktad till sig.
+
+Snooze ska loggas och helst ha reason.
+
+10.2 Handlägg själv / Dölj för kollegor
+
+Ärendet ligger kvar i kategorin, t.ex. Kundtjänst.
+
+Ärendet visas aktivt bara för owner och ansluten support.
+
+Kollegor i samma kategori får inte ärendet i sina normala aktiva listor.
+
+Nya kund-/medarbetarmeddelanden gör inte ärendet aktivt för kollegor; bara owner/support notifieras.
+
+Detta är inte privat ärende. Supervisor/superadmin ska kunna se via översikt.
+
+Systemet bör visa kontrollvy för ärenden som handläggs själv länge eller där owner är inaktiv/frånvarande.
+
+10.3 Låsta ärenden och access request
+
+Ett låst ärende ska kunna hittas via kund-/medarbetarsökning men innehållet är dolt.
+
+Admin utan access ser begränsad metadata och knapp: Begär åtkomst.
+
+Owner/support får notifikation i Notification Center: "Admin X begär åtkomst till ärende Y".
+
+Owner/support kan acceptera eller neka.
+
+Beslut skapar notifikation till begärande admin.
+
+Acceptera bör kunna ha nivåer: read-only, add as support, owner transfer.
+
+Superadmin / behörig lead ska kunna override:a låsta ärenden. Override loggas tydligt.
+
+Om owner är frånvarande eller inte svarar inom X tid ska access request eskaleras.
+
+Access request flowAdmin 1 searches customer -> finds locked Request 5551Admin 1 clicks Request AccessNotification created for Admin 2 / ownerAdmin 2 chooses: Approve read-only | Approve support | DenySystem logs decisionAdmin 1 receives Notification: access granted/deniedIf granted: Request access rule updated
+
+11. Notifikationscenter
+
+DefinitionNotifikationscenter är ett separat men tight kopplat system för operativa signaler. Det ska inte ersätta ärenden och inte automatiskt göra alla systemhändelser till ärenden.
+
+11.1 Notification types
+
+Information / För din information
+
+Prio
+
+Emergency
+
+Access request
+
+AI recommendation
+
+System warning
+
+Configurable notification types via settings
+
+11.2 Exempel: sen incheckning
+
+Event: AssignmentNotStartedCondition: employee has not checked in after X minutesRule v1:  Create Notification(severity=Prio, target=AreaLead/Worklead)  Link to employee + booking + schedule  Admin can mark handled or create requestRule later:  AI asks employee for estimated arrival  AI recalculates schedule impact  If no downstream customer impact -> information notification  If downstream customer impact -> prio/emergency notification
+
+Sen incheckning är primärt en notifikation, inte automatiskt en arbetsuppgift eller ett ärende.
+
+Admin ska kunna skapa ärende från notisen om händelsen kräver längre uppföljning.
+
+Notifikationen ska ha status: unread, acknowledged, handled, dismissed.
+
+Notifikationen ska kunna länka till relevant medarbetare, bokning, kund och schema.
+
+11.3 Notification settings v1
+
+Setting
+
+Beskrivning
+
+notification_type
+
+Namn och kategori.
+
+trigger_event
+
+Vilken SystemEvent som kan skapa notisen.
+
+delay_minutes
+
+Fördröjning efter event/condition.
+
+severity
+
+Information, Prio, Emergency.
+
+target_roles/groups
+
+Roller, grupper eller specifika admin.
+
+requires_action
+
+Kräver hantering/acknowledgement.
+
+can_create_request
+
+Admin får skapa ärende från notis.
+
+auto_create_request
+
+Endast för tydliga regler, ej default.
+
+ai_recommendation_enabled
+
+AI får generera rekommendationstext/förslag.
+
+12. Chatt och AI-intake
+
+MålChatt ska vara AI-first och fungera som intake. 90% av enkla frågor ska på sikt kunna pareras av AI, men första implementation ska fokusera på strukturerad intake, summering och eskalering.
+
+12.1 Chat states
+
+State
+
+Beskrivning
+
+open
+
+Session skapad.
+
+ai_handling
+
+AI ställer frågor och försöker lösa.
+
+waiting_for_admin
+
+AI kan inte lösa eller admin takeover begärs.
+
+admin_takeover
+
+Admin är online och tar över chatten.
+
+converted_to_request
+
+Chatt har skapat eller kopplats till ärende.
+
+closed
+
+Chatt avslutad utan vidare action.
+
+12.2 Flöde: AI kan inte lösa
+
+Customer/employee starts chatAI asks clarifying questionsAI cannot solve within policyIf admin online and available:  offer admin takeoverElse:  create Request from chat  include subject, summary, transcript, suggested category, priority, tasks  notify relevant category/group/owner
+
+12.3 Skapa ärende från chatt
+
+Admin ska kunna skapa ärende från chatt manuellt.
+
+AI ska kunna skapa ärendeutkast eller skarpt ärende enligt AI policy.
+
+Chattkonversationen ska läsas över till ärendet som transcript/sammanfattning.
+
+Ärendet ska få source=chat och linked_chat_session_id.
+
+Om chatt gäller befintligt ärende ska chatten kunna kopplas till existing_request_id istället för att skapa dubblett.
+
+13. AI Assistant Layer
+
+När koppla AI API?AI API ska inte kopplas på först. Bygg Internal AI Service med mock-adapter tidigt. Koppla riktig AI-provider först när Request Core, Chat Core, Notification Core, access och admin approval-flöden fungerar i staging.
+
+13.1 Arkitektur
+
+Application modules  Request Manager | Chat | Notification Center | Dashboard        |        vInternal AI Service  - AI policy enforcement  - Prompt/context builder  - Tool permission resolver  - Provider adapter: mock | OpenAI | other  - AIActionLog writer        |        vExternal AI provider API
+
+Moduler ska inte anropa AI-provider direkt.
+
+AI ska endast få använda kontrollerade interna tools/functions.
+
+AI ska börja i suggestion mode och admin approval ska krävas för externa åtgärder.
+
+Alla AI-input snapshots och outputs ska loggas i AIActionLog.
+
+AI ska kunna bytas mellan mock och riktig provider per environment/feature flag.
+
+13.2 AI autonomy levels
+
+Level
+
+Namn
+
+Tillåtna actions
+
+L0
+
+Mock AI
+
+Returnerar hårdkodade eller deterministic test outputs. Används för UI och flow tests.
+
+L1
+
+Suggestion mode
+
+Kategorisering, prioritet, sammanfattning, följdfrågor, svarsförslag. Ingen extern action.
+
+L2
+
+Draft mode
+
+Skapar utkast till ärende, arbetsuppgift, kundsvar och notifikation. Admin godkänner.
+
+L3
+
+Internal object creation
+
+Skapar interna tasks/summary/metadata inom tydliga regler. Externa parter påverkas inte.
+
+L4
+
+Limited automation
+
+Utför begränsade actions enligt settings, t.ex. enkla svar eller eskalering.
+
+L5
+
+Closure automation
+
+AI får föreslå eller stänga vissa ärenden. Rekommendation: inte från start; admin approval krävs initialt.
+
+13.3 AI tool examples
+
+classify_message(text, actor_context) -> {category, subcategory, confidence}suggest_priority(request_context) -> {priority, severity, reason}summarize_conversation(chat_session_id) -> {summary, open_questions, suggested_tasks}get_customer_upcoming_bookings(customer_id, limit=4) -> [bookings]create_request_draft(ai_summary) -> request_draftcreate_internal_task_draft(request_id, title, assignees?) -> task_draftsuggest_reply(request_id, thread_id) -> reply_draftescalate_to_admin(chat_session_id, reason) -> notification/request action
+
+13.4 Avbokning/ombokning via AI
+
+När kund skriver "jag vill avboka min städning" ska AI inte bara fråga datum.
+
+AI ska hämta kommande fyra städningar via tool och presentera dem för kunden.
+
+Om kunden väljer en av dem kan AI fortsätta med avbokning/ombokning-intake.
+
+Om kunden säger nej ska AI fråga vilket datum det gäller.
+
+Full avboknings-/ombokningsmotor ska ha separat regelverk i settings och påverkar schema, bokning, medarbetare, faktura och kundbekräftelser.
+
+Rekommendation: förbered integrationen men bygg full motor senare.
+
+14. E-post, leverans och inkommande svar
+
+14.1 Utgående e-post från ärende
+
+När admin skriver kundsynligt meddelande ska kunden få e-postnotis enligt ärendets email_policy.
+
+Meddelandet ska sparas direkt i ärendet.
+
+E-post ska skapas som pending outbox job med 10 sekunders fördröjning.
+
+UI visar: "Meddelande kommer att skickas till [kunds namn]".
+
+Actions: Skicka nu, Pausa, Inaktivera utskick för detta ärende.
+
+Admin ska senare kunna aktivera utskick och skicka på nytt.
+
+Alla e-posthändelser loggas.
+
+14.2 Rekommenderad e-postmall
+
+Subject: Nytt svar i ärende [request_number]Hej [customer_name],Du har fått ett nytt svar i ditt ärende.Ärende: [request_type]Ärendenummer: [request_number]Du kan svara direkt på detta mejl eller logga in i portalen. Vi rekommenderar portalen om du vill se hela ärendet och historiken.[Gå till ditt ärende]Meddelande:[message_body]
+
+14.3 Inkommande e-postsvar
+
+Kund ska på sikt kunna svara direkt i e-post.
+
+Systemet bör använda unik reply-token/adress per ärende eller per thread.
+
+Inkommande e-post ska kopplas till rätt RequestThread och skapa RequestMessage.
+
+Autosvar/out-of-office ska detekteras och inte skapa vanligt kundsvar.
+
+Fel avsändare ska flaggas som osäkert inkommande svar.
+
+Bilagor ska scannas, begränsas och kopplas till ärende/media.
+
+Vissa ärendetyper ska kunna vara portal_only.
+
+Risk
+
+Teknisk hantering
+
+Kunden vidarebefordrar mail och annan person svarar
+
+Kontrollera avsändaradress och markera som unverified om den inte matchar kundens e-post.
+
+Autosvar skapar brus
+
+Header-/innehållsbaserad autoresponder-detektion.
+
+Citerad historik följer med
+
+Reply parser som klipper quoted content men sparar raw email vid behov.
+
+Känsliga ärenden
+
+email_policy=portal_only eller notify_only.
+
+Leveransfel/bounce
+
+EmailDelivery status, retry och admin notification vid persistent failure.
+
+15. Dashboard och operativa avvikelser
+
+PrincipDashboard ska visa saker att se över. Det är inte samma sak som ärenden. Admin ska kunna lösa direkt, skapa notis, skapa ärende eller ignorera enligt behörighet.
+
+Ej tilldelade ärenden.
+
+Ärenden utan kategori.
+
+Ärenden utan owner.
+
+Förfallna SLA / SLA nära förfall.
+
+Emergency requests.
+
+Låsta ärenden med pending access requests.
+
+Snoozade ärenden som snart aktiveras.
+
+Handlägg själv-ärenden där owner är inaktiv.
+
+Bokning saknar personal.
+
+Städprotokoll saknas.
+
+Missad tidrapport.
+
+Obetalda fakturor.
+
+Systemhändelser som behöver mänsklig granskning.
+
+16. Kopplingar till andra moduler
+
+Modul
+
+REQUEST-koppling
+
+Kommentar
+
+Customer Card
+
+Visa kundens ärenden, skapa ärende, preview/låsta ärenden, kundtrådar.
+
+Admin ska kunna söka kund och se relaterade ärenden enligt accessnivå.
+
+Employee Card
+
+Visa medarbetarärenden, skapa ärende, emergency, schema/lön-frågor.
+
+Viktigt för fältpersonal och arbetsledning.
+
+Booking
+
+Koppla ärende till bokning, visa kommande städningar via AI, avbokning/ombokning.
+
+Full regelmotor senare.
+
+Work Orders
+
+Koppla AO, uppdatera AO-anteckningar via task, relatera till städprotokoll.
+
+Interna tasks kan peka på AO-uppdatering.
+
+Invoices
+
+Fakturafrågor, obetalda fakturor, systemärenden, e-post och kundkommunikation.
+
+Obetald faktura kan vara automatisk system-request.
+
+Schedule
+
+Schemaärende, sena incheckningar, ombokning, påverkan på kunder.
+
+Sen incheckning är primärt notification.
+
+Payroll
+
+Fråga om lön, löneperioder, personalärenden, portal_only vid känsliga data.
+
+Kräver stark access control.
+
+Media Center
+
+Bilagor, bilder, dokument, kundsynlig/intern synlighet.
+
+Filer ska ärvas till korrekt visibility_scope.
+
+Activity Log
+
+Audit av actions, state changes, access, AI, email.
+
+Obligatoriskt.
+
+17. Behörighet, säkerhet och audit
+
+SäkerhetsmodellAnvänd RBAC för grova roller och ABAC för ärendespecifik access. Behörighet får inte bara baseras på kategori.
+
+17.1 Access resolution
+
+can_read_request(user, request):  if user.is_superadmin and policy.allow_superadmin_override: return true with audit  if request.is_locked and not user has explicit_access: return metadata_only  if user == request.owner: return true  if user in request.support_admins: return true  if request.category in user.assigned_categories and not request.handled_by_owner_only: return true  if user assigned to related area/employee and policy allows: return true  return false
+
+17.2 Aktörstyper
+
+Actor
+
+Typisk access
+
+Super Admin
+
+Kan se och override:a enligt policy. Alla override loggas.
+
+Company Admin
+
+Access enligt bolag, kategori, owner, support, område och locks.
+
+Admin/Support
+
+Ser egna ärenden, supportärenden och tilldelade kategorier.
+
+Arbetsledare
+
+Ser område, medarbetare och kategorier enligt settings.
+
+Kund
+
+Ser endast kundsynliga trådar/ärenden och egen portaldata.
+
+Medarbetare
+
+Ser endast medarbetarsynliga trådar/ärenden och egen portaldata.
+
+AI
+
+Har ingen fri databasaccess. Får använda godkända tools enligt policy.
+
+System
+
+Kan skapa events, notifications och system requests enligt rules.
+
+17.3 Audit events
+
+Request created/updated/closed/reopened.
+
+Owner/support/category changed.
+
+Status, priority, severity och SLA changed.
+
+Message created, email sent, email paused, email disabled, email retry.
+
+Internal task created, assigned, acknowledged, completed.
+
+Snooze created/removed/expired/auto-unsnoozed.
+
+Handlägg själv enabled/disabled.
+
+Request locked/unlocked.
+
+Access requested/approved/denied/overridden.
+
+Notification created/acknowledged/handled/dismissed.
+
+AI proposal created/accepted/rejected/executed.
+
+Test data created/deleted.
+
+18. Event-driven design och automation
+
+Event principleAlla moduler ska kunna skapa SystemEvent. Regler avgör om eventet blir notis, dashboard item, task, nytt ärende, tillägg i befintligt ärende eller no-op.
+
+SystemEvent  type: AssignmentNotStarted | InvoiceOverdue | CustomerMessageReceived | AIUnableToResolve | ...  source_module: schedule | invoice | chat | request | payroll | work_order  linked_object_type/id  payload_json  created_at      |      vRule evaluation      |      +-> Notification      +-> DashboardItem      +-> InternalTask      +-> Append to existing system Request      +-> Create new Request      +-> No-op / log only
+
+Systemhändelse
+
+Första rekommenderade output
+
+Senare möjlig automation
+
+Medarbetare sen / ej incheckad
+
+Notification till arbetsledning.
+
+AI frågar medarbetare, räknar schemaeffekt, skapar prio/emergency.
+
+Obetald faktura
+
+System request eller dashboard item beroende på policy.
+
+AI sammanfattar fakturahistorik och föreslår kundmeddelande.
+
+AI kan inte lösa chatt
+
+Skapa request från chatt.
+
+AI väljer kategori, prioritet, tasks och föreslår ägare.
+
+Bokning saknar personal
+
+Dashboard item / notification.
+
+Admin kan skapa request vid behov.
+
+Kund svarar i ärende
+
+Unsnooze + requires_attention + notification to owner/support.
+
+AI föreslår svar.
+
+Medarbetare skickar emergency
+
+Request severity=Emergency + popup.
+
+Routing/ack/re-escalation.
+
+19. Settings / konfiguration
+
+Request settings
+
+Ärendekategorier och underkategorier.
+
+Hårdkodade och adminskapade ärendetyper.
+
+Statusar, priority, severity, SLA defaults.
+
+Ägare/support-routing.
+
+Interna inläggstyper.
+
+E-postpolicy per kategori/typ.
+
+Snooze-regler och vilka roller som får Dölj för alla.
+
+Handlägg själv-regler.
+
+Låsnings-/access-regler.
+
+Notification settings
+
+Notifikationstyper.
+
+Trigger events.
+
+Fördröjning, t.ex. X minuter.
+
+Severity.
+
+Mottagande roller/grupper/admin.
+
+Requires action.
+
+Can create request / auto create request.
+
+AI recommendation enabled.
+
+AI settings
+
+AI-autonominivå per kategori/ärendetyp.
+
+AI får samla info, föreslå, skapa draft, skapa skarpt ärende, föreslå stängning.
+
+Admin approval krävs för externa svar och closure i initial release.
+
+Vilka tools AI får använda per context.
+
+Module-specific settings
+
+Avbokning/ombokning-regler.
+
+Faktura-/påminnelseregler.
+
+Schemahändelser.
+
+Lön/personalärenden.
+
+Reklamation och kvalitet.
+
+20. Teststrategi, testdata och datarensning
+
+KravLöpande testning med mycket testdata är rätt strategi. Testdata måste dock vara separerad, batch-märkt och rensbar via script innan produktionsexponering.
+
+20.1 Miljöer
+
+Miljö
+
+Syfte
+
+Dataprincip
+
+Development
+
+Utveckling och snabb iteration.
+
+Stökig testdata tillåten, reset ofta.
+
+Staging/Test
+
+Realistiska end-to-end-flöden.
+
+Seedad testtenant, test_batch_id, realistiska kunder/medarbetare/bokningar/fakturor.
+
+Production
+
+Skarp miljö.
+
+Ingen testdata. Feature flags default off för externa roller tills release.
+
+20.2 Test data tagging
+
+is_test_data = truetest_batch_id = "request-platform-e2e-001"test_tenant_id = "demo-cleaning-company"created_by_environment = "staging"created_by_test_scenario = "emergency_request_flow"
+
+Rensa ärenden, meddelanden, interna posts, tasks, notifications, chats, AI logs, email deliveries, attachments, read receipts, access requests, snooze records och audit events kopplade till testdata.
+
+Rensa inte produktionssettings, kategorier och mallar om de ska behållas.
+
+RORK ska bygga seed/reset scripts och cleanup scripts innan tung testning startar.
+
+Testdata bör helst ligga i separat testtenant så att bulk cleanup inte kan träffa riktig data.
+
+20.3 Testmode
+
+Skapa testkund.
+
+Skapa testmedarbetare.
+
+Skapa testbokning.
+
+Skapa testfaktura.
+
+Simulera kundmeddelande.
+
+Simulera medarbetarsvar.
+
+Simulera missad incheckning.
+
+Simulera emergency request.
+
+Simulera AI unable to resolve.
+
+Simulera access request.
+
+Rensa testbatch.
+
+21. Feature flags och miljöstrategi
+
+enable_request_platformenable_request_managerenable_notification_centerenable_chatenable_ai_mockenable_ai_provider_openaienable_ai_suggestion_modeenable_ai_auto_create_requestenable_email_outboundenable_email_inbound_replyenable_request_snoozeenable_request_handle_selfenable_locked_requestsenable_emergency_popupenable_test_mode
+
+Feature flags ska kunna styras per environment, tenant och roll där det är relevant.
+
+Extern kund-/medarbetarexponering ska vara off tills regressionstest är godkänd.
+
+AI-provider ska kunna vara mock i staging och riktig provider i separat AI-testläge.
+
+Nya automatiska actions ska alltid kunna stängas av utan deploy.
+
+22. API-kontrakt och service boundaries
+
+RiktlinjeExakta API-kontrakt ska föreslås av RORK. Nedan är rekommenderade service boundaries och endpoint-kandidater.
+
+22.1 Request endpoints
+
+GET    /api/requestsPOST   /api/requestsGET    /api/requests/{id}PATCH  /api/requests/{id}POST   /api/requests/{id}/threadsPOST   /api/requests/{id}/threads/{threadId}/messagesPOST   /api/requests/{id}/internal-postsPOST   /api/internal-posts/{postId}/commentsPOST   /api/internal-posts/{postId}/assigneesPOST   /api/internal-posts/{postId}/acknowledgePOST   /api/requests/{id}/snoozePOST   /api/requests/{id}/handle-selfPOST   /api/requests/{id}/lockPOST   /api/requests/{id}/access-requestsPOST   /api/access-requests/{id}/approvePOST   /api/access-requests/{id}/deny
+
+22.2 Notification endpoints
+
+GET    /api/notificationsPOST   /api/notifications/{id}/acknowledgePOST   /api/notifications/{id}/handlePOST   /api/notifications/{id}/dismissPOST   /api/notifications/{id}/create-requestGET    /api/notification-typesPOST   /api/notification-rules
+
+22.3 Chat and AI endpoints
+
+POST   /api/chat/sessionsPOST   /api/chat/sessions/{id}/messagesPOST   /api/chat/sessions/{id}/convert-to-requestPOST   /api/chat/sessions/{id}/admin-takeoverPOST   /api/ai/classify-messagePOST   /api/ai/summarize-conversationPOST   /api/ai/suggest-replyPOST   /api/ai/create-request-draftPOST   /api/ai/approve-proposalPOST   /api/ai/reject-proposal
+
+23. Implementation phases
+
+TolkningAllt kan byggas före extern release, men implementationen bör fortfarande delas i tekniska phases för att kunna testas och verifieras. Detta är inte en extern releaseplan, utan intern byggordning.
+
+23.1 Foundation to core platform
+
+Phase
+
+Namn
+
+Scope
+
+Exit criteria
+
+0
+
+Architecture validation
+
+RORK föreslår datamodell, migrations, API, komponentträd, risker och testplan.
+
+Godkänd implementation plan.
+
+1
+
+Foundation/domain schema
+
+Core tables, roles, categories, audit, feature flags, test mode.
+
+Migrations kör, seed/reset fungerar.
+
+2
+
+Request Core
+
+Skapa/lista/öppna ärende, trekolumnsvy, owner/support/category/status/priority.
+
+Admin kan skapa och hantera grundärende.
+
+3
+
+Threads and visibility
+
+Customer/employee/shared/internal threads, visibility scopes, external messages.
+
+Kund/medarbetare ser rätt trådar i testportal.
+
+4
+
+Internal posts/tasks
+
+Task posts, assignees, comments, acknowledgement, read state.
+
+Marcus/Sebastian-scenario fungerar.
+
+5
+
+Notification Center v1
+
+Notifications, severity, target roles/groups, handle/ack, create request from notification.
+
+Sen incheckning kan simuleras och hanteras.
+
+6
+
+Chat v1 + mock AI
+
+Chat sessions, mock AI, create request from chat, transcript summary.
+
+AI-intake utan riktig API fungerar.
+
+23.2 Advanced visibility, AI, email and hardening
+
+Phase
+
+Namn
+
+Scope
+
+Exit criteria
+
+7
+
+Visibility advanced
+
+Snooze, quick hide, handle self, locked requests, access request, preview.
+
+Alla visibility-scenarier fungerar med audit.
+
+8
+
+Email outbound
+
+Outbox, 10 sec delay, send now/pause/disable/resend, portal link.
+
+Kundmail skickas i staging med logg.
+
+9
+
+AI provider suggestion mode
+
+Internal AI Service provider adapter, suggestion mode, AIActionLog.
+
+Riktig AI föreslår kategori/summary/reply i test.
+
+10
+
+Emergency request
+
+Severity emergency, global popup, acknowledge, green state, routing.
+
+Medarbetare emergency flöde fungerar.
+
+11
+
+Inbound email reply
+
+Reply token, inbound parser, attachments, autoresponse filter.
+
+Kundsvar via mail landar i rätt ärende.
+
+12
+
+Hardening/regression
+
+Performance, permissions, cleanup, E2E tests, bugfix.
+
+Lanseringskandidat utan testdata.
+
+24. Acceptance tests / Definition of Done
+
+Kundflöde
+
+Kund startar chatt eller skickar ärende.
+
+AI/mock-AI samlar information och föreslår kategori/prioritet.
+
+Ärende skapas eller utkast skapas.
+
+Admin svarar.
+
+Kund får e-postnotis med 10 sek delay.
+
+Kund kan se ärendet i portal och endast kundsynlig tråd.
+
+Kundsvar väcker snoozat ärende.
+
+Medarbetarflöde
+
+Medarbetare skickar emergency request.
+
+Global popup visas för rätt admin.
+
+Admin acknowledge: popup blir grön för övriga.
+
+Emergency släcks och ärendet fortsätter som vanligt request.
+
+Intern task-flow
+
+Sebastian skapar tre tasks.
+
+Task 1 till Sebastian, Task 2 otilldelad, Task 3 till Marcus + Sebastian.
+
+Kommentar i Task 3 notifierar båda.
+
+Sebastian acknowledge -> grön, Marcus kvar blå.
+
+Att öppna ärendet markerar inte task som läst förrän posten öppnas.
+
+Visibility-flow
+
+Dölj för mig fungerar.
+
+Dölj för alla fungerar men döljer inte för admin med obekräftad task.
+
+Quick hide döljer globalt i 2 dagar.
+
+Handlägg själv döljer för kollegor men inte owner/support.
+
+Låst ärende syns i sök med metadata men kräver access request.
+
+Access request approve/deny skapar notifications och audit.
+
+Notification-flow
+
+Sen incheckning skapar notification, inte request.
+
+Admin kan markera handled.
+
+Admin kan skapa request från notification.
+
+Notification länkar korrekt till employee/booking/customer.
+
+Testdata-flow
+
+Seed skapar testbatch.
+
+E2E-flöden körs med testdata.
+
+Cleanup tar bort ärenden, meddelanden, notiser, chattar, AI logs, emails och attachments kopplade till batch.
+
+Production-data påverkas inte.
+
+25. Risker, öppna frågor och rekommendationer
+
+25.1 Huvudrisker
+
+Risk
+
+Konsekvens
+
+Motåtgärd
+
+Big bang complexity
+
+Svårt att felsöka, många beroenden.
+
+Bygg med phases, feature flags, mock-AI och E2E testscenarier.
+
+Begreppsförvirring kring dölj
+
+Felaktigt dolda ärenden.
+
+Separera snooze, handlägg själv och locked access.
+
+Access model blir för svår
+
+Admin ser fel saker eller kommer inte åt rätt saker.
+
+RBAC+ABAC, preview states, audit, override.
+
+AI skapar för mycket brus
+
+För många ärenden/notiser/tasks.
+
+AI policy levels, admin approval, create-existing-request logic.
+
+E-postintegration skapar skräp
+
+Autosvar, fel tråd, bilagor, spam.
+
+Outbox/inbox design, reply tokens, parser, filters.
+
+Testdata läcker till produktion
+
+Dålig releasekvalitet.
+
+Separata miljöer, testtenant, batch cleanup, feature flags.
+
+Notifikationscenter blir regelmotor för tidigt
+
+Försenad implementation.
+
+V1: enkla rules. V2+: avancerad automation.
+
+25.2 Öppna frågor att RORK bör besvara
+
+Vilken fysisk datamodell rekommenderas utifrån befintlig stack och nuvarande CRM-modeller?
+
+Ska RequestThread och RequestMessage ligga i generiska communication tables eller request-specifika tables?
+
+Hur ska multi-tenant isolation implementeras för REQUEST Platform?
+
+Vilken access resolver-strategi ska användas: central policy service, middleware eller query scopes?
+
+Vilken kö/outbox ska användas för e-post, notifications och AI jobs?
+
+Hur ska inbound email implementeras i stacken: provider webhook, mailbox polling eller mail service?
+
+Vilken modell ska användas för test data cleanup och seed scripts?
+
+Hur ska UI-komponenterna delas mellan admin, kundportal och medarbetarportal?
+
+Hur ska AI provider adapter implementeras så att mock/OpenAI/annan provider kan bytas per environment?
+
+Vilka delar bör implementeras som transactions och vilka som async jobs?
+
+26. RORK-uppdrag
+
+Uppdrag till RORKTa fram en implementeringsplan för REQUEST Platform baserat på detta dokument. Implementation plan ska vara teknisk, fasad och testbar. Målet är 10/10 kvalitet före extern lansering.
+
+Föreslå slutlig datamodell med tabeller, relationer, indexes och migrationsordning.
+
+Föreslå API-kontrakt och service boundaries.
+
+Föreslå access resolver / permissions model.
+
+Föreslå frontend component architecture för admin UI, kundportal och medarbetarportal.
+
+Föreslå Notification Center implementation med event rules v1.
+
+Föreslå Chat implementation med mock-AI och senare provider adapter.
+
+Föreslå Email outbox/inbox architecture.
+
+Föreslå test mode, seed data och cleanup scripts.
+
+Föreslå feature flags och rollout gates.
+
+Identifiera risker, teknisk skuld, blockers och beroenden till befintliga moduler.
+
+Ta fram konkret implementation order med tickets/epics och acceptance criteria.
+
+Expected deliverable from RORK:1. Technical implementation plan2. Data model / ERD / migrations3. API contracts4. UI component plan5. Permission model6. Event/notification architecture7. AI adapter plan8. Email delivery/inbound plan9. Test plan and seed/reset scripts10. Risks, dependencies and estimated build order
+
+27. Referenser
+
+Dessa referenser används endast för AI-API-relaterade teknikbeslut. Systemet ska inte hårdkodas mot en specifik AI-provider utan gå via Internal AI Service.
+
+OpenAI Function Calling guide: platform.openai.com/docs/guides/function-calling
+
+OpenAI Responses API reference: platform.openai.com/docs/api-reference/responses
+
+OpenAI Assistants migration guide: platform.openai.com/docs/assistants/overview
+
+Slutlig rekommendationBygg REQUEST Platform som en sammanhållen arkitektur med ärendehanterare, chatt, notifikationscenter och AI-lager från start. Implementera med mock-AI, feature flags, testbatchar och strikt audit. Koppla riktig AI först när kärnflödena fungerar i staging och admin approval-flöden finns.

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stadportalen.se/schemas/request-settings-shell.schema.json",
+  "title": "RequestSettingsShellItem",
+  "type": "object",
+  "required": [
+    "key",
+    "section",
+    "label",
+    "status",
+    "central_automation_link"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "section": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "mock",
+        "planned",
+        "active_later",
+        "disabled"
+      ]
+    },
+    "local_domain_effect": {
+      "type": "string"
+    },
+    "central_automation_link": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "risk_level_candidate": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical",
+        "none"
+      ]
+    },
+    "ai_extension_candidate": {
+      "type": "boolean"
+    },
+    "feature_flag": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

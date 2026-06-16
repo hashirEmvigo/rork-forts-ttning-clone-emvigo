@@ -1,0 +1,78 @@
+-- ============================================================================
+-- CleanOps — NUM-1 (Phase 2, customers): durable customer-number uniqueness guard
+-- ============================================================================
+--
+-- CONTEXT
+--   Phase 1 (migration 0043) added number_counters + allocate_number(...), the
+--   single database authority for visible business numbers. Phase 2 wires the
+--   CUSTOMER series to it: createCustomerInSupabase now calls
+--   allocate_number(<company legacy id>, 'customer') instead of the old
+--   MAX(existing)+1 generator, so a customer number is issued ONCE, consumed
+--   permanently, and never reused — deleting or archiving a customer never frees
+--   its number, and the frontend/localStorage never calculate it.
+--
+-- WHAT THIS MIGRATION ADDS
+--   A company-scoped UNIQUE guard on the visible customer number. allocate_number
+--   already guarantees uniqueness by construction (the counter only moves
+--   forward), so this index is defence-in-depth at the storage layer: it makes a
+--   duplicate (company, customer_number) physically impossible, so no bug, manual
+--   edit, or legacy mirror write can ever land two customers on the same visible
+--   number within one company.
+--
+-- SCOPE MODEL — COMPANY-SCOPED, MIRRORS THE ALLOCATOR
+--   Uniqueness is keyed on (company_legacy_id, customer_number), exactly the
+--   scope allocate_number issues against (company_scope = company legacy id).
+--   Company A and Company B may BOTH legitimately have a customer "C-1"; what is
+--   physically forbidden is Company A holding "C-1" twice.
+--
+-- NO-REUSE SPANS ALL ROWS — NO PARTIAL `WHERE` CLAUSE (revised)
+--   The business rule is absolute: within a company a customer_number must NEVER
+--   be reused, even after that customer is removed / soft-deleted or archived.
+--   The guard is therefore a FULL unique index over EVERY customer row, with NO
+--   `deleted_at is null` predicate. A tombstoned (deleted_at set) row keeps
+--   occupying its number, so a later insert can never reclaim it at the storage
+--   layer — not just in active views.
+--
+--   (An earlier draft of this migration used a partial index restricted to live
+--   rows. That left soft-deleted numbers technically re-insertable and is
+--   replaced here; the soft-delete fast-path read index idx_customers_active
+--   from migration 0033 is unrelated and stays as-is.)
+--
+--   Both index columns are NOT NULL (customers.company_legacy_id and
+--   customers.customer_number, migration 0007), so there is no NULL-distinct gap:
+--   every row — active, archived, or tombstoned — presents a concrete
+--   (company, number) pair, leaving the no-reuse guarantee with no escape hatch.
+--
+-- SAFE TO BUILD AS A FULL INDEX
+--   * Re-creating / restoring a customer reuses the SAME row by legacy_id (the
+--     upsert sets deleted_at = null in place), so it never spawns a second row
+--     competing for the same number — the full index does not block it.
+--   * allocate_number only moves forward, so every NEW customer receives a number
+--     no existing row (live or tombstoned) holds.
+--   * The only thing this full index newly forbids versus the old partial one is
+--     re-issuing a tombstoned customer's number — exactly the reuse this rule
+--     prohibits.
+--   The customers table was emptied by the verified test-data reset, so the index
+--   builds on a clean table. If a future apply ever errored here it would mean
+--   genuine duplicate (company, customer_number) data predating the allocator,
+--   which must be reconciled before NUM-1 can be trusted — never by weakening
+--   this guard back to a partial index.
+--
+-- NON-GOALS / SAFETY
+--   * No data is migrated or modified; this only (re)creates one index.
+--   * No table, RPC, policy, sequence, or counter is changed.
+--   * number_counters and the reset tooling are untouched, so consumed numbers
+--     survive the standard test-data cleanup / company deletion.
+--   * Out of scope for this phase: work orders, employees, invoices, bookings,
+--     service rows, reset tooling, and any UI display formatting.
+-- ============================================================================
+
+-- Drop any earlier (e.g. partial) definition so re-applying always converges on
+-- the authoritative FULL guard below. No-op on a first apply (0044 not yet live).
+drop index if exists uq_customers_company_customer_number;
+
+-- FULL company-scoped unique guard: NO predicate, so active, archived AND
+-- soft-deleted (tombstoned) rows every one reserve their customer_number
+-- permanently — a consumed number can never be reused within the company.
+create unique index if not exists uq_customers_company_customer_number
+  on customers (company_legacy_id, customer_number);

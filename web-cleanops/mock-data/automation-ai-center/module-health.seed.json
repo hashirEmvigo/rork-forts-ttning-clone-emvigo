@@ -1,0 +1,145 @@
+[
+  {
+    "module": "schedule",
+    "displayName": "Schedule",
+    "healthStatus": "degraded",
+    "p95LatencyMs": 820,
+    "errorRatePercent": 0.8,
+    "openIncidents": 1,
+    "circuitBreakerState": "closed",
+    "runtimeState": "limited_mode",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "cases",
+    "displayName": "Cases",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 310,
+    "errorRatePercent": 0.2,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "chat",
+    "displayName": "Chat",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 540,
+    "errorRatePercent": 0.5,
+    "openIncidents": 1,
+    "circuitBreakerState": "closed",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "notifications",
+    "displayName": "Notifications",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 260,
+    "errorRatePercent": 0.1,
+    "openIncidents": 0,
+    "circuitBreakerState": "closed",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "keys_alarm",
+    "displayName": "Keys & Alarm",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 290,
+    "errorRatePercent": 0.0,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "customer_card",
+    "displayName": "Customer Card",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 460,
+    "errorRatePercent": 0.3,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "work_orders",
+    "displayName": "Work Orders",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 430,
+    "errorRatePercent": 0.2,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "invoices",
+    "displayName": "Invoices",
+    "healthStatus": "limited",
+    "p95LatencyMs": 1450,
+    "errorRatePercent": 2.1,
+    "openIncidents": 1,
+    "circuitBreakerState": "half_open",
+    "runtimeState": "limited_mode",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "media",
+    "displayName": "Media",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 980,
+    "errorRatePercent": 0.4,
+    "openIncidents": 0,
+    "circuitBreakerState": "closed",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "time_bank",
+    "displayName": "Time Bank",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 280,
+    "errorRatePercent": 0.1,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "agreements",
+    "displayName": "Agreements",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 330,
+    "errorRatePercent": 0.1,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "employees",
+    "displayName": "Employees",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 360,
+    "errorRatePercent": 0.2,
+    "openIncidents": 0,
+    "circuitBreakerState": "not_applicable",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "module": "system",
+    "displayName": "System",
+    "healthStatus": "healthy",
+    "p95LatencyMs": 240,
+    "errorRatePercent": 0.1,
+    "openIncidents": 0,
+    "circuitBreakerState": "closed",
+    "runtimeState": "enabled",
+    "lastCheckedAt": "2026-06-11T12:00:00Z"
+  }
+]

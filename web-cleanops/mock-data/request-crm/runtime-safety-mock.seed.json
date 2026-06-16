@@ -1,0 +1,26 @@
+[
+  {
+    "surface": "request_list",
+    "status": "mock_ok",
+    "latency_budget_ms": 300,
+    "runtime_flag_ref": "request_crm_request_list_guard",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "display only"
+  },
+  {
+    "surface": "chat_session",
+    "status": "mock_warning",
+    "latency_budget_ms": 500,
+    "runtime_flag_ref": "request_crm_chat_guard",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "display only"
+  },
+  {
+    "surface": "notification_center",
+    "status": "mock_ok",
+    "latency_budget_ms": 250,
+    "runtime_flag_ref": "request_crm_notification_guard",
+    "source_of_truth": "Automation & AI Center",
+    "slice_0_behavior": "display only"
+  }
+]

@@ -1,0 +1,946 @@
+[
+  {
+    "id": "aix_001",
+    "automationActionKey": "schedule.delay.impact_detected",
+    "assistantKey": "schedule_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "schedule",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": false,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_002",
+    "automationActionKey": "schedule.delay.negative_customer_impact_detected",
+    "assistantKey": "schedule_assistant",
+    "aiMode": "prepare_approval",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "schedule",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_003",
+    "automationActionKey": "schedule.conflict.assignment_overlap_detected",
+    "assistantKey": "schedule_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "schedule",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": false,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_004",
+    "automationActionKey": "schedule.route.travel_time_risk_detected",
+    "assistantKey": "schedule_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "schedule",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_005",
+    "automationActionKey": "cases.priority.initial_priority_suggested",
+    "assistantKey": "cases_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "cases",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_006",
+    "automationActionKey": "cases.sla.unhandled_case_risk",
+    "assistantKey": "cases_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "cases",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_007",
+    "automationActionKey": "cases.routing.owner_suggestion_created",
+    "assistantKey": "cases_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "cases",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_008",
+    "automationActionKey": "cases.escalation.complaint_case_escalated",
+    "assistantKey": "cases_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "cases",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_009",
+    "automationActionKey": "chat.message.unanswered_detected",
+    "assistantKey": "chat_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "chat",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.chat.user_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_010",
+    "automationActionKey": "chat.message.complaint_detected",
+    "assistantKey": "chat_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "chat",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.chat.user_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_011",
+    "automationActionKey": "chat.request.booking_detected",
+    "assistantKey": "chat_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "chat",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.chat.user_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_012",
+    "automationActionKey": "chat.request.cancellation_detected",
+    "assistantKey": "chat_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "chat",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.chat.user_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_013",
+    "automationActionKey": "keys.access.missing_key_info",
+    "assistantKey": "keys_alarm_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "keys_alarm",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_014",
+    "automationActionKey": "keys.access.missing_alarm_code",
+    "assistantKey": "keys_alarm_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "keys_alarm",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_015",
+    "automationActionKey": "keys.access.instruction_conflict",
+    "assistantKey": "keys_alarm_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "keys_alarm",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_016",
+    "automationActionKey": "customer.profile.cleaning_protocol_missing",
+    "assistantKey": "customer_card_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "customer_card",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_017",
+    "automationActionKey": "work_orders.data.missing_required_info",
+    "assistantKey": "work_orders_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "work_orders",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_018",
+    "automationActionKey": "work_orders.quality.issue_detected",
+    "assistantKey": "work_orders_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "work_orders",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_019",
+    "automationActionKey": "invoices.question.customer_invoice_question",
+    "assistantKey": "invoices_assistant",
+    "aiMode": "suggest_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step"
+    ],
+    "requiredContext": [
+      {
+        "source": "invoices",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_020",
+    "automationActionKey": "media.review.damage_photo_uploaded",
+    "assistantKey": "media_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "media",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_021",
+    "automationActionKey": "agreements.cancellation.requested",
+    "assistantKey": "agreements_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "agreements",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "super_admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_022",
+    "automationActionKey": "employees.absence.reported",
+    "assistantKey": "employees_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "employees",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  },
+  {
+    "id": "aix_023",
+    "automationActionKey": "employees.shift.conflict_detected",
+    "assistantKey": "employees_assistant",
+    "aiMode": "draft_only",
+    "allowedOutputs": [
+      "summary",
+      "risk_assessment",
+      "recommended_next_step",
+      "customer_message_draft",
+      "approval_request_payload"
+    ],
+    "requiredContext": [
+      {
+        "source": "employees",
+        "fields": [
+          "sourceEntityId",
+          "status",
+          "timestamps",
+          "notes"
+        ],
+        "required": true,
+        "piiRisk": "medium"
+      }
+    ],
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "enabled": true,
+    "modelConfigKey": "future_default_model_config",
+    "promptVersion": "mock-v0",
+    "timeoutMs": 12000,
+    "maxRetries": 1,
+    "requestBudgetKey": "ai.shared.default_request_budget",
+    "tokenBudgetKey": "ai.shared.default_token_budget",
+    "providerCircuitBreakerKey": "circuit.ai_provider.default"
+  }
+]

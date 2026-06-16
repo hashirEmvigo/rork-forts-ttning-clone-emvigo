@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stadportalen.se/schemas/request-mock-entity.schema.json",
+  "title": "RequestMockEntity",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "is_test_data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "is_test_data": {
+      "type": "boolean"
+    },
+    "test_batch_id": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

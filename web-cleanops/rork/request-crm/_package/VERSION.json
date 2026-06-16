@@ -1,0 +1,10 @@
+{
+  "package": "REQUEST CRM Communications Platform - RORK Package",
+  "version": "v0.2-automation-ai-center-aligned",
+  "status": "implementation-planning-ready",
+  "date": "2026-06-11",
+  "source_document": "REQUEST_CRM_Arkitektur_RORK_v0.1_source.docx",
+  "alignment_dependency": "Automation & AI Center Runtime Safety v3 must be treated as the global source of truth for automation, AI decisions, runtime guards, kill switches, incident logs and performance/resilience gates.",
+  "hard_boundary": "REQUEST owns communication domain logic. Automation & AI Center owns automation policy, AI extension policy, runtime guard state, execution/incident history and approval policy.",
+  "first_allowed_build": "Slice 0 frontend shell with mock/static data only. No live enforcement, no live automation, no live AI provider, no production notification runner."
+}

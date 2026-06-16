@@ -1,0 +1,742 @@
+[
+  {
+    "key": "search",
+    "label": "Search",
+    "type": "search",
+    "options": [],
+    "appliesTo": [
+      "auto_actions",
+      "execution_log",
+      "approval_queue",
+      "runtime_incidents",
+      "feature_flags",
+      "runtime_limits",
+      "module_health",
+      "performance_budgets",
+      "runtime_guard_policies"
+    ]
+  },
+  {
+    "key": "module",
+    "label": "Module",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "Schedule",
+        "value": "schedule"
+      },
+      {
+        "label": "Cases",
+        "value": "cases"
+      },
+      {
+        "label": "Chat",
+        "value": "chat"
+      },
+      {
+        "label": "Notifications",
+        "value": "notifications"
+      },
+      {
+        "label": "Keys & Alarm",
+        "value": "keys_alarm"
+      },
+      {
+        "label": "Customer Card",
+        "value": "customer_card"
+      },
+      {
+        "label": "Work Orders",
+        "value": "work_orders"
+      },
+      {
+        "label": "Invoices",
+        "value": "invoices"
+      },
+      {
+        "label": "Media",
+        "value": "media"
+      },
+      {
+        "label": "Time Bank",
+        "value": "time_bank"
+      },
+      {
+        "label": "Agreements",
+        "value": "agreements"
+      },
+      {
+        "label": "Employees",
+        "value": "employees"
+      },
+      {
+        "label": "System",
+        "value": "system"
+      }
+    ],
+    "appliesTo": [
+      "auto_actions",
+      "module_coverage",
+      "execution_log",
+      "approval_queue",
+      "runtime_incidents",
+      "feature_flags",
+      "runtime_limits",
+      "module_health",
+      "performance_budgets",
+      "runtime_guard_policies"
+    ]
+  },
+  {
+    "key": "status",
+    "label": "Action status",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "draft",
+        "value": "draft"
+      },
+      {
+        "label": "planned",
+        "value": "planned"
+      },
+      {
+        "label": "active",
+        "value": "active"
+      },
+      {
+        "label": "disabled",
+        "value": "disabled"
+      },
+      {
+        "label": "deprecated",
+        "value": "deprecated"
+      }
+    ],
+    "appliesTo": [
+      "auto_actions"
+    ]
+  },
+  {
+    "key": "riskLevel",
+    "label": "Risk level",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "low",
+        "value": "low"
+      },
+      {
+        "label": "medium",
+        "value": "medium"
+      },
+      {
+        "label": "high",
+        "value": "high"
+      },
+      {
+        "label": "critical",
+        "value": "critical"
+      }
+    ],
+    "appliesTo": [
+      "auto_actions",
+      "execution_log",
+      "approval_queue",
+      "runtime_guard_policies"
+    ]
+  },
+  {
+    "key": "executionMode",
+    "label": "Execution mode",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "observe_only",
+        "value": "observe_only"
+      },
+      {
+        "label": "auto_execute_with_log",
+        "value": "auto_execute_with_log"
+      },
+      {
+        "label": "auto_execute_with_notification",
+        "value": "auto_execute_with_notification"
+      },
+      {
+        "label": "requires_admin_review",
+        "value": "requires_admin_review"
+      },
+      {
+        "label": "requires_company_admin_approval",
+        "value": "requires_company_admin_approval"
+      },
+      {
+        "label": "requires_super_admin_approval",
+        "value": "requires_super_admin_approval"
+      },
+      {
+        "label": "blocked",
+        "value": "blocked"
+      }
+    ],
+    "appliesTo": [
+      "auto_actions"
+    ]
+  },
+  {
+    "key": "supportsAi",
+    "label": "Supports AI",
+    "type": "boolean",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "appliesTo": [
+      "auto_actions"
+    ]
+  },
+  {
+    "key": "aiEnabled",
+    "label": "AI enabled",
+    "type": "boolean",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "appliesTo": [
+      "auto_actions",
+      "ai_extensions"
+    ]
+  },
+  {
+    "key": "approvalRequired",
+    "label": "Approval required",
+    "type": "boolean",
+    "options": [
+      {
+        "label": "Yes",
+        "value": true
+      },
+      {
+        "label": "No",
+        "value": false
+      }
+    ],
+    "appliesTo": [
+      "auto_actions",
+      "approval_queue"
+    ]
+  },
+  {
+    "key": "executionStatus",
+    "label": "Execution status",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "detected",
+        "value": "detected"
+      },
+      {
+        "label": "evaluating",
+        "value": "evaluating"
+      },
+      {
+        "label": "skipped",
+        "value": "skipped"
+      },
+      {
+        "label": "pending_approval",
+        "value": "pending_approval"
+      },
+      {
+        "label": "proposed",
+        "value": "proposed"
+      },
+      {
+        "label": "executed",
+        "value": "executed"
+      },
+      {
+        "label": "failed",
+        "value": "failed"
+      },
+      {
+        "label": "cancelled",
+        "value": "cancelled"
+      }
+    ],
+    "appliesTo": [
+      "execution_log"
+    ]
+  },
+  {
+    "key": "dateRange",
+    "label": "Date range",
+    "type": "date_range",
+    "options": [],
+    "appliesTo": [
+      "execution_log",
+      "approval_queue"
+    ]
+  },
+  {
+    "key": "incidentSeverity",
+    "label": "Incident severity",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "info",
+        "value": "info"
+      },
+      {
+        "label": "warning",
+        "value": "warning"
+      },
+      {
+        "label": "high",
+        "value": "high"
+      },
+      {
+        "label": "critical",
+        "value": "critical"
+      }
+    ],
+    "appliesTo": [
+      "runtime_incidents",
+      "module_health",
+      "runtime_guard_policies"
+    ]
+  },
+  {
+    "key": "incidentStatus",
+    "label": "Incident status",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "open",
+        "value": "open"
+      },
+      {
+        "label": "acknowledged",
+        "value": "acknowledged"
+      },
+      {
+        "label": "investigating",
+        "value": "investigating"
+      },
+      {
+        "label": "mitigated",
+        "value": "mitigated"
+      },
+      {
+        "label": "resolved",
+        "value": "resolved"
+      },
+      {
+        "label": "false_positive",
+        "value": "false_positive"
+      }
+    ],
+    "appliesTo": [
+      "runtime_incidents"
+    ]
+  },
+  {
+    "key": "guardAction",
+    "label": "Guard action",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "log_only",
+        "value": "log_only"
+      },
+      {
+        "label": "throttle",
+        "value": "throttle"
+      },
+      {
+        "label": "limit_data",
+        "value": "limit_data"
+      },
+      {
+        "label": "set_read_only",
+        "value": "set_read_only"
+      },
+      {
+        "label": "disable_feature",
+        "value": "disable_feature"
+      },
+      {
+        "label": "open_circuit",
+        "value": "open_circuit"
+      },
+      {
+        "label": "quarantine_session",
+        "value": "quarantine_session"
+      },
+      {
+        "label": "block_request",
+        "value": "block_request"
+      },
+      {
+        "label": "create_incident",
+        "value": "create_incident"
+      },
+      {
+        "label": "notify_it_team",
+        "value": "notify_it_team"
+      },
+      {
+        "label": "notify_super_admin",
+        "value": "notify_super_admin"
+      },
+      {
+        "label": "require_manual_review",
+        "value": "require_manual_review"
+      },
+      {
+        "label": "fallback_to_cached_or_empty_state",
+        "value": "fallback_to_cached_or_empty_state"
+      }
+    ],
+    "appliesTo": [
+      "runtime_incidents",
+      "runtime_limits",
+      "runtime_guard_policies"
+    ]
+  },
+  {
+    "key": "runtimeState",
+    "label": "Runtime state",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "enabled",
+        "value": "enabled"
+      },
+      {
+        "label": "limited_mode",
+        "value": "limited_mode"
+      },
+      {
+        "label": "read_only",
+        "value": "read_only"
+      },
+      {
+        "label": "admin_only",
+        "value": "admin_only"
+      },
+      {
+        "label": "maintenance_mode",
+        "value": "maintenance_mode"
+      },
+      {
+        "label": "disabled",
+        "value": "disabled"
+      }
+    ],
+    "appliesTo": [
+      "feature_flags",
+      "module_health"
+    ]
+  },
+  {
+    "key": "healthStatus",
+    "label": "Health status",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "healthy",
+        "value": "healthy"
+      },
+      {
+        "label": "degraded",
+        "value": "degraded"
+      },
+      {
+        "label": "limited",
+        "value": "limited"
+      },
+      {
+        "label": "unhealthy",
+        "value": "unhealthy"
+      },
+      {
+        "label": "disabled",
+        "value": "disabled"
+      },
+      {
+        "label": "maintenance",
+        "value": "maintenance"
+      }
+    ],
+    "appliesTo": [
+      "module_health"
+    ]
+  },
+  {
+    "key": "performanceBudgetStatus",
+    "label": "Performance budget status",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "passing",
+        "value": "passing"
+      },
+      {
+        "label": "warning",
+        "value": "warning"
+      },
+      {
+        "label": "failing",
+        "value": "failing"
+      },
+      {
+        "label": "not_tested",
+        "value": "not_tested"
+      }
+    ],
+    "appliesTo": [
+      "performance_budgets"
+    ]
+  },
+  {
+    "key": "limitType",
+    "label": "Limit type",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "request_count",
+        "value": "request_count"
+      },
+      {
+        "label": "concurrent_requests",
+        "value": "concurrent_requests"
+      },
+      {
+        "label": "retry_count",
+        "value": "retry_count"
+      },
+      {
+        "label": "polling_frequency",
+        "value": "polling_frequency"
+      },
+      {
+        "label": "realtime_subscriptions",
+        "value": "realtime_subscriptions"
+      },
+      {
+        "label": "payload_size",
+        "value": "payload_size"
+      },
+      {
+        "label": "upload_size",
+        "value": "upload_size"
+      },
+      {
+        "label": "export_job_count",
+        "value": "export_job_count"
+      },
+      {
+        "label": "database_row_count",
+        "value": "database_row_count"
+      },
+      {
+        "label": "query_duration",
+        "value": "query_duration"
+      },
+      {
+        "label": "ai_request_count",
+        "value": "ai_request_count"
+      },
+      {
+        "label": "ai_token_budget",
+        "value": "ai_token_budget"
+      },
+      {
+        "label": "background_job_concurrency",
+        "value": "background_job_concurrency"
+      }
+    ],
+    "appliesTo": [
+      "runtime_limits"
+    ]
+  },
+  {
+    "key": "runtimeGuardPolicyStatus",
+    "label": "Runtime guard policy status",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "draft",
+        "value": "draft"
+      },
+      {
+        "label": "planned",
+        "value": "planned"
+      },
+      {
+        "label": "active",
+        "value": "active"
+      },
+      {
+        "label": "disabled",
+        "value": "disabled"
+      },
+      {
+        "label": "deprecated",
+        "value": "deprecated"
+      }
+    ],
+    "appliesTo": [
+      "runtime_guard_policies"
+    ]
+  },
+  {
+    "key": "runtimeGuardScope",
+    "label": "Runtime guard scope",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "session",
+        "value": "session"
+      },
+      {
+        "label": "user",
+        "value": "user"
+      },
+      {
+        "label": "company",
+        "value": "company"
+      },
+      {
+        "label": "role",
+        "value": "role"
+      },
+      {
+        "label": "module",
+        "value": "module"
+      },
+      {
+        "label": "route",
+        "value": "route"
+      },
+      {
+        "label": "endpoint",
+        "value": "endpoint"
+      },
+      {
+        "label": "automation_action",
+        "value": "automation_action"
+      },
+      {
+        "label": "background_job",
+        "value": "background_job"
+      },
+      {
+        "label": "ai_assistant",
+        "value": "ai_assistant"
+      },
+      {
+        "label": "public_surface",
+        "value": "public_surface"
+      },
+      {
+        "label": "system",
+        "value": "system"
+      }
+    ],
+    "appliesTo": [
+      "runtime_guard_policies",
+      "runtime_limits"
+    ]
+  },
+  {
+    "key": "runtimeGuardTrigger",
+    "label": "Runtime guard trigger",
+    "type": "multi_select",
+    "options": [
+      {
+        "label": "rate_limit_exceeded",
+        "value": "rate_limit_exceeded"
+      },
+      {
+        "label": "resource_quota_exceeded",
+        "value": "resource_quota_exceeded"
+      },
+      {
+        "label": "concurrent_limit_exceeded",
+        "value": "concurrent_limit_exceeded"
+      },
+      {
+        "label": "retry_limit_exceeded",
+        "value": "retry_limit_exceeded"
+      },
+      {
+        "label": "frontend_loop_detected",
+        "value": "frontend_loop_detected"
+      },
+      {
+        "label": "polling_frequency_exceeded",
+        "value": "polling_frequency_exceeded"
+      },
+      {
+        "label": "realtime_reconnect_storm_detected",
+        "value": "realtime_reconnect_storm_detected"
+      },
+      {
+        "label": "timeout_threshold_exceeded",
+        "value": "timeout_threshold_exceeded"
+      },
+      {
+        "label": "error_rate_threshold_exceeded",
+        "value": "error_rate_threshold_exceeded"
+      },
+      {
+        "label": "latency_threshold_exceeded",
+        "value": "latency_threshold_exceeded"
+      },
+      {
+        "label": "slow_query_detected",
+        "value": "slow_query_detected"
+      },
+      {
+        "label": "ai_quota_exceeded",
+        "value": "ai_quota_exceeded"
+      },
+      {
+        "label": "upload_limit_exceeded",
+        "value": "upload_limit_exceeded"
+      },
+      {
+        "label": "circuit_breaker_opened",
+        "value": "circuit_breaker_opened"
+      },
+      {
+        "label": "dependency_health_failed",
+        "value": "dependency_health_failed"
+      },
+      {
+        "label": "manual_kill_switch",
+        "value": "manual_kill_switch"
+      }
+    ],
+    "appliesTo": [
+      "runtime_guard_policies",
+      "runtime_incidents"
+    ]
+  }
+]

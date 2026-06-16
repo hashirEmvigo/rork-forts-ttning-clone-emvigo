@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stadportalen.se/schemas/request-feature-flag.schema.json",
+  "title": "RequestFeatureFlag",
+  "type": "object",
+  "required": [
+    "key",
+    "default",
+    "scope",
+    "description"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "default": {
+      "type": "boolean"
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "environment",
+          "tenant",
+          "role",
+          "user"
+        ]
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "slice_0": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

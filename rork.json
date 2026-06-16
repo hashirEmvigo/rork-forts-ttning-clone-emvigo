@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "CleanOps",
+      "path": "web-cleanops",
+      "framework": "web",
+      "settings": {
+        "webSlug": "stadportalen"
+      }
+    }
+  ],
+  "$schema": "https://rork.com/schema/rork.json"
+}

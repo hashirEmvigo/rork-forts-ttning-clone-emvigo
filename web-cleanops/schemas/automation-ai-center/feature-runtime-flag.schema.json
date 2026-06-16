@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FeatureRuntimeFlag",
+  "type": "object",
+  "required": [
+    "id",
+    "key",
+    "featureName",
+    "state",
+    "reason",
+    "changedBy",
+    "changedAt",
+    "auditRequired"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "featureName": {
+      "type": "string"
+    },
+    "module": {
+      "enum": [
+        "schedule",
+        "cases",
+        "chat",
+        "notifications",
+        "keys_alarm",
+        "customer_card",
+        "work_orders",
+        "invoices",
+        "media",
+        "time_bank",
+        "agreements",
+        "employees",
+        "system",
+        null
+      ]
+    },
+    "state": {
+      "enum": [
+        "enabled",
+        "limited_mode",
+        "read_only",
+        "admin_only",
+        "maintenance_mode",
+        "disabled"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "changedBy": {
+      "type": "string"
+    },
+    "changedAt": {
+      "type": "string"
+    },
+    "linkedIncidentId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "auditRequired": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

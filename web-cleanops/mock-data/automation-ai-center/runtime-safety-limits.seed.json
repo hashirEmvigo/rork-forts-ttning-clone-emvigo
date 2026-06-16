@@ -1,0 +1,210 @@
+[
+  {
+    "id": "rsl_001",
+    "key": "schedule.booking_list.session_read_limit",
+    "name": "Booking List session read limit",
+    "description": "Prevents one browser session from repeatedly reloading Booking List and overloading schedule reads.",
+    "module": "schedule",
+    "scope": "session",
+    "limitType": "request_count",
+    "windowSeconds": 60,
+    "threshold": 60,
+    "unit": "requests/minute",
+    "guardAction": "throttle",
+    "severity": "warning",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/company/booking-list",
+      "/company/schedule"
+    ],
+    "appliesToEndpoints": [
+      "/api/bookings/list",
+      "/api/schedule/range"
+    ],
+    "appliesToActionKeys": [],
+    "fallbackBehavior": "Show controlled throttling message and stop auto-refetch for the session.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_002",
+    "key": "schedule.schedule_grid.data_window_limit",
+    "name": "Schedule Grid bounded data window",
+    "description": "Prevents unbounded schedule range reads.",
+    "module": "schedule",
+    "scope": "user",
+    "limitType": "database_row_count",
+    "windowSeconds": null,
+    "threshold": 500,
+    "unit": "rows/request",
+    "guardAction": "limit_data",
+    "severity": "warning",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/company/schedule"
+    ],
+    "appliesToEndpoints": [
+      "/api/schedule/range"
+    ],
+    "appliesToActionKeys": [
+      "schedule.delay.impact_detected"
+    ],
+    "fallbackBehavior": "Return bounded date range and ask user to narrow filters.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_003",
+    "key": "invoices.export.company_concurrency_limit",
+    "name": "Invoice export concurrency limit",
+    "description": "Prevents one company from starting many invoice export jobs at once.",
+    "module": "invoices",
+    "scope": "company",
+    "limitType": "export_job_count",
+    "windowSeconds": 300,
+    "threshold": 1,
+    "unit": "active_jobs/company",
+    "guardAction": "block_request",
+    "severity": "high",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/company/invoices"
+    ],
+    "appliesToEndpoints": [
+      "/api/invoices/export"
+    ],
+    "appliesToActionKeys": [],
+    "fallbackBehavior": "Show queued/export already running message.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_004",
+    "key": "ai.chat.user_request_budget",
+    "name": "AI chat user request budget",
+    "description": "Prevents unbounded AI calls by one user.",
+    "module": "chat",
+    "scope": "user",
+    "limitType": "ai_request_count",
+    "windowSeconds": 60,
+    "threshold": 10,
+    "unit": "ai_requests/minute",
+    "guardAction": "throttle",
+    "severity": "warning",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/company/chat",
+      "/super-admin/automation-ai-center"
+    ],
+    "appliesToEndpoints": [
+      "/api/ai/chat"
+    ],
+    "appliesToActionKeys": [
+      "chat.message.complaint_detected"
+    ],
+    "fallbackBehavior": "Show AI quota message and keep non-AI chat available.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_005",
+    "key": "media.upload.company_concurrency_limit",
+    "name": "Media upload concurrency limit",
+    "description": "Prevents upload storms from one company.",
+    "module": "media",
+    "scope": "company",
+    "limitType": "concurrent_requests",
+    "windowSeconds": null,
+    "threshold": 5,
+    "unit": "concurrent_uploads",
+    "guardAction": "throttle",
+    "severity": "warning",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/company/media"
+    ],
+    "appliesToEndpoints": [
+      "/api/media/upload"
+    ],
+    "appliesToActionKeys": [],
+    "fallbackBehavior": "Pause additional uploads and show controlled queue/try-later state.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_006",
+    "key": "automation.runner.action_concurrency_limit",
+    "name": "Automation action concurrency limit",
+    "description": "Prevents one automation action from running too many executions in parallel.",
+    "module": "system",
+    "scope": "automation_action",
+    "limitType": "background_job_concurrency",
+    "windowSeconds": null,
+    "threshold": 3,
+    "unit": "parallel_executions/action",
+    "guardAction": "open_circuit",
+    "severity": "high",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/super-admin/automation-ai-center"
+    ],
+    "appliesToEndpoints": [
+      "/api/automation/execute"
+    ],
+    "appliesToActionKeys": [],
+    "fallbackBehavior": "Switch action to observe-only or queue later execution.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_007",
+    "key": "public.pricing_calculator.session_limit",
+    "name": "Public pricing calculator session limit",
+    "description": "Prevents abuse or looped quote calculations on public surface.",
+    "module": "system",
+    "scope": "public_surface",
+    "limitType": "request_count",
+    "windowSeconds": 60,
+    "threshold": 30,
+    "unit": "requests/minute",
+    "guardAction": "throttle",
+    "severity": "warning",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/pricing",
+      "/quote"
+    ],
+    "appliesToEndpoints": [
+      "/api/public/pricing-calculate"
+    ],
+    "appliesToActionKeys": [],
+    "fallbackBehavior": "Show try-again-later message for public client only.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rsl_008",
+    "key": "customer_card.detail.session_reload_limit",
+    "name": "Customer Card detail reload limit",
+    "description": "Prevents repeated customer card reload loops from a single session.",
+    "module": "customer_card",
+    "scope": "session",
+    "limitType": "request_count",
+    "windowSeconds": 60,
+    "threshold": 40,
+    "unit": "requests/minute",
+    "guardAction": "quarantine_session",
+    "severity": "high",
+    "status": "planned",
+    "appliesToRoutes": [
+      "/company/customers/:id"
+    ],
+    "appliesToEndpoints": [
+      "/api/customer-card/detail"
+    ],
+    "appliesToActionKeys": [],
+    "fallbackBehavior": "Session enters limited mode; user can reload, logout, or contact support.",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  }
+]

@@ -1,0 +1,335 @@
+-- ============================================================================
+-- CleanOps — PROPOSED migration 0034: explicit tenant-deletion routine
+--                                     + profiles.company_id ON DELETE RESTRICT
+-- ============================================================================
+--
+-- STATUS: PROPOSAL / UNAPPLIED. This file deliberately lives OUTSIDE
+--   `web-cleanops/supabase/migrations/` and uses the `.sql.proposed` extension
+--   so the Supabase migration runner will NOT pick it up. It changes nothing
+--   until it is reviewed, approved, renamed to a real `0034_*.sql`, and moved
+--   into the migrations folder.
+--
+-- Source of truth for the design:
+--   * docs/architecture/50-tenant-deletion-schema-hardening-proposal.md (Option D + C)
+--   * docs/architecture/42-tenant-test-data-reset-runbook.md (validated ordering)
+--
+-- WHAT THIS MIGRATION DOES (when eventually applied):
+--   1. Repoints the profiles.company_id FK from ON DELETE SET NULL to
+--      ON DELETE RESTRICT (schema-hardening Option C — fail-closed backstop).
+--   2. Creates public.delete_company_tenant(...) — an explicit, audited,
+--      SECURITY DEFINER routine that deletes one tenant's company-scoped data in
+--      a controlled order and returns per-table counts (Option D — the mechanism).
+--   3. Locks execution of the routine down to privileged callers only.
+--
+-- WHAT THIS MIGRATION DOES NOT DO:
+--   * It never touches auth.users (see "Why auth.users is excluded" below).
+--   * It never deletes the protected super_admin.
+--   * It performs no destructive action by itself — it only *defines* a routine.
+--     Running the routine against a real company is a separate, deliberate call.
+--
+-- ─────────────────────────────────────────────────────────────────────────
+-- WHY TENANT DELETION MUST BE EXPLICIT
+--   Today, "delete a company" is an emergent property of mismatched FK rules:
+--   most company-scoped tables cascade from companies(id), but profiles is
+--   ON DELETE SET NULL and is simultaneously guarded by
+--   profiles_company_required_check. The net effect is that a naive
+--   `DELETE FROM companies` either aborts on the CHECK or leaves detached,
+--   constraint-violating profiles — exactly what was observed during the
+--   Städalliansen reset. Centralising deletion in one routine makes ordering,
+--   guards, and counts a single, testable, reviewable unit instead of tribal
+--   runbook knowledge.
+--
+-- WHY auth.users IS EXCLUDED
+--   profiles.id references auth.users(id) ON DELETE CASCADE is one-directional:
+--   deleting an auth user deletes its profile, never the reverse. Deleting a
+--   tenant therefore CANNOT and SHOULD NOT remove auth.users from inside this
+--   routine — auth identities may be reused, audited, or legally retained, and
+--   a SECURITY DEFINER public-schema function should not reach into the auth
+--   schema. Auth cleanup stays a separate, optional, allowlist-driven step
+--   (runbook Phases D–F).
+--
+-- WHY THE PROTECTED SUPER_ADMIN IS EXCLUDED
+--   sebastian@stadalliansen.se is a super_admin with company_id = NULL, so no
+--   `company_id = target` filter can ever match him. The routine still asserts
+--   this explicitly (defence in depth) and refuses to delete any profile whose
+--   email matches the protected address or whose base_role is super_admin.
+--
+-- WHY SUPABASE SQL EDITOR SCRIPTS SHOULD USE SEPARATE EXECUTION/VERIFICATION
+--   The earlier reset reported in-transaction POST = 0 yet did not persist,
+--   because explicit BEGIN/COMMIT/ROLLBACK keywords in the SQL Editor behave
+--   ambiguously. This routine wraps its own work in a single function-level
+--   transaction (one atomic call, no operator-typed transaction keywords).
+--   Operators must still VERIFY with a SEPARATE SELECT-only query AFTER the
+--   call — never trust the returned counts as proof of persistence.
+-- ============================================================================
+
+
+-- ─────────────────────────────────────────────────────────────────────────
+-- PART 1 — Schema hardening: profiles.company_id  SET NULL → RESTRICT
+--
+-- RESTRICT makes it physically impossible to delete a company row while any
+-- profile still references it. This turns the runbook's "delete profiles before
+-- the company" ordering from a convention into an enforced invariant, and it
+-- guarantees delete_company_tenant() must remove profiles first (which it does).
+--
+-- The original FK was created inline in migration 0003 and therefore carries the
+-- auto-generated name `profiles_company_id_fkey`. We drop it defensively (by
+-- discovering the actual constraint name) and recreate it as RESTRICT.
+-- ─────────────────────────────────────────────────────────────────────────
+do $$
+declare
+  v_constraint_name text;
+begin
+  select con.conname
+    into v_constraint_name
+    from pg_constraint con
+    join pg_class rel        on rel.oid = con.conrelid
+    join pg_namespace nsp    on nsp.oid = rel.relnamespace
+    join pg_attribute att    on att.attrelid = con.conrelid
+                            and att.attnum = any (con.conkey)
+   where nsp.nspname = 'public'
+     and rel.relname = 'profiles'
+     and con.contype = 'f'
+     and att.attname = 'company_id'
+   limit 1;
+
+  if v_constraint_name is null then
+    raise exception
+      'Expected a foreign key on public.profiles(company_id); none found. Aborting (fail-closed).';
+  end if;
+
+  execute format('alter table public.profiles drop constraint %I', v_constraint_name);
+
+  alter table public.profiles
+    add constraint profiles_company_id_fkey
+    foreign key (company_id)
+    references public.companies(id)
+    on delete restrict;
+end
+$$;
+
+
+-- ─────────────────────────────────────────────────────────────────────────
+-- PART 2 — The explicit tenant-deletion routine
+--
+-- Signature:
+--   delete_company_tenant(
+--     target_company_id     uuid,           -- REQUIRED
+--     target_company_legacy_id text,        -- REQUIRED (cross-check)
+--     protected_super_admin_email text DEFAULT 'sebastian@stadalliansen.se'
+--   ) returns jsonb
+--
+-- Returns a jsonb deletion summary, e.g.
+--   {
+--     "company_id": "...", "company_legacy_id": "cmp_...",
+--     "deleted": { "mission_log_entries": 6, "work_orders": 11, ..., "companies": 1 },
+--     "verified_zero": true
+--   }
+--
+-- Guarantees:
+--   * Requires BOTH identifiers and asserts they resolve to the SAME company.
+--   * Refuses (raises) if the company is missing or the two identifiers mismatch.
+--   * Deletes in the mandatory child → parent order (matches the runbook).
+--   * Only ever matches company_id = target (super_admin has NULL → never hit),
+--     and additionally excludes the protected email / super_admin base_role.
+--   * Never references the auth schema.
+--   * Fails closed: any unexpected leftover after deletion raises and rolls back
+--     the whole call (function body is one implicit transaction).
+-- ─────────────────────────────────────────────────────────────────────────
+create or replace function public.delete_company_tenant(
+  target_company_id            uuid,
+  target_company_legacy_id     text,
+  protected_super_admin_email  text default 'sebastian@stadalliansen.se'
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_company           public.companies%rowtype;
+  v_counts            jsonb := '{}'::jsonb;
+  v_n                 bigint;
+  v_leftover_company  bigint;
+  v_leftover_profiles bigint;
+begin
+  -- ── Guard 1: both identifiers are mandatory. Fail closed on NULL/blank. ──
+  if target_company_id is null then
+    raise exception 'delete_company_tenant: target_company_id is required (got NULL).';
+  end if;
+  if target_company_legacy_id is null or btrim(target_company_legacy_id) = '' then
+    raise exception 'delete_company_tenant: target_company_legacy_id is required (got NULL/blank).';
+  end if;
+
+  -- ── Guard 2: the company must exist AND both identifiers must agree. ──
+  select * into v_company
+    from public.companies
+   where id = target_company_id;
+
+  if not found then
+    raise exception
+      'delete_company_tenant: no company with id=% (nothing to delete; fail-closed).',
+      target_company_id;
+  end if;
+
+  if v_company.legacy_id is distinct from target_company_legacy_id then
+    raise exception
+      'delete_company_tenant: identifier mismatch for id=% — stored legacy_id=%, supplied=%. Aborting.',
+      target_company_id, v_company.legacy_id, target_company_legacy_id;
+  end if;
+
+  -- ── Guard 3: refuse to proceed if the protected super_admin would somehow be
+  --    scoped to this company (defence in depth; should be impossible). ──
+  if exists (
+    select 1 from public.profiles p
+     where p.company_id = target_company_id
+       and (p.email = protected_super_admin_email or p.base_role = 'super_admin')
+  ) then
+    raise exception
+      'delete_company_tenant: a protected/super_admin profile is scoped to company % — aborting (fail-closed).',
+      target_company_id;
+  end if;
+
+  -- ── Ordered deletion (children → parents). Each step records its row count.
+  --    Every DELETE is scoped strictly by company_id = target_company_id. ──
+
+  -- 1. mission_log_entries (+ related mission_log children)
+  delete from public.mission_log_entries where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('mission_log_entries', v_n);
+
+  delete from public.mission_log_events where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('mission_log_events', v_n);
+
+  delete from public.mission_staff_sessions where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('mission_staff_sessions', v_n);
+
+  delete from public.mission_booked_time_ratings where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('mission_booked_time_ratings', v_n);
+
+  -- 2. work_order_service_rows (+ occurrence exceptions)
+  delete from public.work_order_service_rows where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('work_order_service_rows', v_n);
+
+  delete from public.work_order_occurrence_exceptions where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('work_order_occurrence_exceptions', v_n);
+
+  -- 3. work_orders
+  delete from public.work_orders where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('work_orders', v_n);
+
+  -- 4. customers
+  delete from public.customers where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('customers', v_n);
+
+  -- 5. other company-scoped tables (time reporting, agreements, time bank,
+  --    payroll, employees). Delete children before their parents where ordering
+  --    matters; all are scoped by company_id.
+  delete from public.time_report_flag_events where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_report_flag_events', v_n);
+
+  delete from public.time_report_flags where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_report_flags', v_n);
+
+  delete from public.time_report_messages where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_report_messages', v_n);
+
+  delete from public.time_report_events where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_report_events', v_n);
+
+  delete from public.time_allocations where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_allocations', v_n);
+
+  delete from public.time_reports where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_reports', v_n);
+
+  delete from public.time_deviation_reason_codes where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_deviation_reason_codes', v_n);
+
+  delete from public.saved_review_queues where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('saved_review_queues', v_n);
+
+  delete from public.saved_filters where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('saved_filters', v_n);
+
+  delete from public.customer_agreement_lines where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('customer_agreement_lines', v_n);
+
+  delete from public.customer_agreements where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('customer_agreements', v_n);
+
+  delete from public.time_bank_transactions where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_bank_transactions', v_n);
+
+  delete from public.time_bank_wallets where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('time_bank_wallets', v_n);
+
+  delete from public.payroll_export_runs where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('payroll_export_runs', v_n);
+
+  delete from public.payroll_export_profiles where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('payroll_export_profiles', v_n);
+
+  delete from public.payroll_export_capabilities where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('payroll_export_capabilities', v_n);
+
+  delete from public.employees where company_id = target_company_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('employees', v_n);
+
+  -- 6. company-scoped profiles — MUST precede the company row (RESTRICT FK).
+  --    Protected super_admin / any super_admin explicitly excluded; they cannot
+  --    match company_id = target anyway (their company_id is NULL).
+  delete from public.profiles
+   where company_id = target_company_id
+     and email is distinct from protected_super_admin_email
+     and base_role <> 'super_admin';
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('profiles', v_n);
+
+  -- 7. company row last — by BOTH id and legacy_id for precision.
+  delete from public.companies
+   where id = target_company_id
+     and legacy_id = target_company_legacy_id;
+  get diagnostics v_n = row_count;  v_counts := v_counts || jsonb_build_object('companies', v_n);
+
+  -- ── Fail-closed verification inside the same transaction. If anything still
+  --    references the company, RAISE → the whole call rolls back atomically. ──
+  select count(*) into v_leftover_company
+    from public.companies where id = target_company_id;
+  select count(*) into v_leftover_profiles
+    from public.profiles where company_id = target_company_id;
+
+  if v_leftover_company <> 0 or v_leftover_profiles <> 0 then
+    raise exception
+      'delete_company_tenant: post-delete check failed (company_left=%, profiles_left=%). Rolling back.',
+      v_leftover_company, v_leftover_profiles;
+  end if;
+
+  return jsonb_build_object(
+    'company_id',        target_company_id,
+    'company_legacy_id', target_company_legacy_id,
+    'deleted',           v_counts,
+    'verified_zero',     true,
+    'note',              'auth.users NOT touched — run the optional auth-orphan cleanup (runbook Phases D–F) separately.'
+  );
+end;
+$$;
+
+
+-- ─────────────────────────────────────────────────────────────────────────
+-- PART 3 — Lock down execution.
+--   The routine is SECURITY DEFINER and RLS-exempt, so it MUST NOT be callable
+--   by anon / authenticated roles. Only the service role (and the table owner)
+--   may execute it. Tenant deletion is always an out-of-band, privileged action.
+-- ─────────────────────────────────────────────────────────────────────────
+revoke all on function
+  public.delete_company_tenant(uuid, text, text) from public;
+revoke all on function
+  public.delete_company_tenant(uuid, text, text) from anon;
+revoke all on function
+  public.delete_company_tenant(uuid, text, text) from authenticated;
+-- service_role retains execute via ownership / explicit grant in the SQL editor.
+
+comment on function public.delete_company_tenant(uuid, text, text) is
+  'Explicit, audited tenant hard-delete. Requires matching company_id + legacy_id. '
+  'Deletes company-scoped data child→parent, then profiles, then the company row. '
+  'Never touches auth.users. Never deletes the protected super_admin. '
+  'Returns a jsonb per-table count summary. Verify with a SEPARATE SELECT-only query.';

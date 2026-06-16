@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RuntimeIncident",
+  "type": "object",
+  "required": [
+    "id",
+    "severity",
+    "status",
+    "title",
+    "description",
+    "triggerType",
+    "guardAction",
+    "startedAt",
+    "lastSeenAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "high",
+        "critical"
+      ]
+    },
+    "status": {
+      "enum": [
+        "open",
+        "acknowledged",
+        "investigating",
+        "mitigated",
+        "resolved",
+        "false_positive"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "module": {
+      "enum": [
+        "schedule",
+        "cases",
+        "chat",
+        "notifications",
+        "keys_alarm",
+        "customer_card",
+        "work_orders",
+        "invoices",
+        "media",
+        "time_bank",
+        "agreements",
+        "employees",
+        "system",
+        null
+      ]
+    },
+    "route": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "endpoint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "companyId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "userId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sessionId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "actionKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "triggerType": {
+      "enum": [
+        "rate_limit_exceeded",
+        "resource_quota_exceeded",
+        "concurrent_limit_exceeded",
+        "retry_limit_exceeded",
+        "frontend_loop_detected",
+        "polling_frequency_exceeded",
+        "realtime_reconnect_storm_detected",
+        "timeout_threshold_exceeded",
+        "error_rate_threshold_exceeded",
+        "latency_threshold_exceeded",
+        "slow_query_detected",
+        "ai_quota_exceeded",
+        "upload_limit_exceeded",
+        "circuit_breaker_opened",
+        "dependency_health_failed",
+        "manual_kill_switch"
+      ]
+    },
+    "guardAction": {
+      "enum": [
+        "log_only",
+        "throttle",
+        "limit_data",
+        "set_read_only",
+        "disable_feature",
+        "open_circuit",
+        "quarantine_session",
+        "block_request",
+        "create_incident",
+        "notify_it_team",
+        "notify_super_admin",
+        "require_manual_review",
+        "fallback_to_cached_or_empty_state"
+      ]
+    },
+    "requestCount": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "errorCount": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "latencyMs": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "correlationId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "traceRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "releaseVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "startedAt": {
+      "type": "string"
+    },
+    "lastSeenAt": {
+      "type": "string"
+    },
+    "resolvedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "assignedTo": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolutionNotes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtimeGuardPolicyKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

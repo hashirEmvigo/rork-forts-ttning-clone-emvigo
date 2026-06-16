@@ -1,0 +1,235 @@
+[
+  {
+    "module": "schedule",
+    "displayName": "Schedule",
+    "integrationStatus": "partial",
+    "plannedActions": 8,
+    "activeActions": 1,
+    "aiCapableActions": 4,
+    "aiEnabledActions": 2,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "planned"
+  },
+  {
+    "module": "cases",
+    "displayName": "Cases",
+    "integrationStatus": "planned",
+    "plannedActions": 6,
+    "activeActions": 0,
+    "aiCapableActions": 4,
+    "aiEnabledActions": 4,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "chat",
+    "displayName": "Chat",
+    "integrationStatus": "planned",
+    "plannedActions": 5,
+    "activeActions": 0,
+    "aiCapableActions": 4,
+    "aiEnabledActions": 4,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "planned"
+  },
+  {
+    "module": "notifications",
+    "displayName": "Notifications",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 0,
+    "aiEnabledActions": 0,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "keys_alarm",
+    "displayName": "Keys & Alarm",
+    "integrationStatus": "planned",
+    "plannedActions": 4,
+    "activeActions": 0,
+    "aiCapableActions": 3,
+    "aiEnabledActions": 3,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "customer_card",
+    "displayName": "Customer Card",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 1,
+    "aiEnabledActions": 1,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "planned"
+  },
+  {
+    "module": "work_orders",
+    "displayName": "Work Orders",
+    "integrationStatus": "planned",
+    "plannedActions": 4,
+    "activeActions": 0,
+    "aiCapableActions": 2,
+    "aiEnabledActions": 2,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "invoices",
+    "displayName": "Invoices",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 1,
+    "aiEnabledActions": 1,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "planned"
+  },
+  {
+    "module": "media",
+    "displayName": "Media",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 1,
+    "aiEnabledActions": 1,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "planned"
+  },
+  {
+    "module": "time_bank",
+    "displayName": "Time Bank",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 0,
+    "aiEnabledActions": 0,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "agreements",
+    "displayName": "Agreements",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 1,
+    "aiEnabledActions": 1,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "employees",
+    "displayName": "Employees",
+    "integrationStatus": "planned",
+    "plannedActions": 3,
+    "activeActions": 0,
+    "aiCapableActions": 2,
+    "aiEnabledActions": 2,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "not_started"
+  },
+  {
+    "module": "system",
+    "displayName": "System",
+    "integrationStatus": "planned",
+    "plannedActions": 1,
+    "activeActions": 0,
+    "aiCapableActions": 0,
+    "aiEnabledActions": 0,
+    "quickReviewStatus": "planned",
+    "missingIntegrationPoints": [
+      "domain_events",
+      "execution_log",
+      "quick_review_link",
+      "runtime_safety_profile"
+    ],
+    "lastReviewedAt": null,
+    "runtimeSafetyStatus": "planned"
+  }
+]

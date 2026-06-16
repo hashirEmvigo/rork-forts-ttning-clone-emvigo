@@ -1,0 +1,53 @@
+[
+  {
+    "id": "req-5551",
+    "type": "request",
+    "request_number": "REQ-5551",
+    "title": "Customer asks to reschedule Friday cleaning",
+    "status": "open",
+    "priority": "normal",
+    "severity": "normal",
+    "category_id": "cat-customer-service",
+    "owner_admin_id": "admin-sebastian",
+    "customer_id": "customer-anna",
+    "has_unread_external": true,
+    "has_unacknowledged_internal_task": false,
+    "automation_quick_review_key": "request.customer_message_received",
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  },
+  {
+    "id": "req-5552",
+    "type": "request",
+    "request_number": "REQ-5552",
+    "title": "Employee reports broken vase",
+    "status": "waiting_internal",
+    "priority": "high",
+    "severity": "prio",
+    "category_id": "cat-worklead",
+    "owner_admin_id": "admin-marcus",
+    "customer_id": "customer-lena",
+    "has_unread_external": false,
+    "has_unacknowledged_internal_task": true,
+    "automation_quick_review_key": "internal_task.comment_created",
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  },
+  {
+    "id": "req-5553",
+    "type": "request",
+    "request_number": "REQ-5553",
+    "title": "Payroll question - missing hours",
+    "status": "new",
+    "priority": "high",
+    "severity": "normal",
+    "category_id": "cat-payroll",
+    "owner_admin_id": null,
+    "customer_id": null,
+    "has_unread_external": true,
+    "has_unacknowledged_internal_task": false,
+    "automation_quick_review_key": "request.unassigned_created",
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  }
+]

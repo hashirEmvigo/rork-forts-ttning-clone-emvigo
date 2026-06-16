@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AutomationExecution",
+  "type": "object",
+  "required": [
+    "id",
+    "actionKey",
+    "actionVersion",
+    "status",
+    "sourceEntityType",
+    "sourceEntityId",
+    "triggerPayload",
+    "conditionResults",
+    "riskLevel",
+    "approvalRequired",
+    "aiUsed",
+    "startedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "actionKey": {
+      "type": "string"
+    },
+    "actionVersion": {
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "detected",
+        "evaluating",
+        "skipped",
+        "pending_approval",
+        "proposed",
+        "executed",
+        "failed",
+        "cancelled",
+        "rate_limited",
+        "blocked_by_guard",
+        "circuit_open",
+        "timed_out"
+      ]
+    },
+    "sourceEventKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sourceEntityType": {
+      "type": "string"
+    },
+    "sourceEntityId": {
+      "type": "string"
+    },
+    "triggerPayload": {
+      "type": "object"
+    },
+    "conditionResults": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "resultPayload": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "riskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "approvalRequired": {
+      "type": "boolean"
+    },
+    "aiUsed": {
+      "type": "boolean"
+    },
+    "startedAt": {
+      "type": "string"
+    },
+    "completedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "errorMessage": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "guardAction": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtimeIncidentId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "durationMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    }
+  },
+  "additionalProperties": true
+}

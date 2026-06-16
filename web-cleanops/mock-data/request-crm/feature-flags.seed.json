@@ -1,0 +1,78 @@
+[
+  {
+    "key": "enable_request_crm_frontend_shell",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant",
+      "role"
+    ],
+    "description": "Enables REQUEST/CRM frontend shell",
+    "slice_0": true
+  },
+  {
+    "key": "enable_request_crm_settings_shell",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant",
+      "role"
+    ],
+    "description": "Enables REQUEST/CRM settings shell",
+    "slice_0": true
+  },
+  {
+    "key": "enable_request_crm_automation_quick_review",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant",
+      "role"
+    ],
+    "description": "Shows mock Automation & AI Center quick-review panels",
+    "slice_0": true
+  },
+  {
+    "key": "enable_request_platform",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant",
+      "role"
+    ],
+    "description": "Enables future REQUEST platform backend",
+    "slice_0": false
+  },
+  {
+    "key": "enable_notification_center",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant",
+      "role"
+    ],
+    "description": "Enables future notification center",
+    "slice_0": false
+  },
+  {
+    "key": "enable_chat",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant",
+      "role"
+    ],
+    "description": "Enables future chat",
+    "slice_0": false
+  },
+  {
+    "key": "enable_ai_mock",
+    "default": false,
+    "scope": [
+      "environment",
+      "tenant"
+    ],
+    "description": "Enables mock AI adapter in later phases",
+    "slice_0": false
+  }
+]

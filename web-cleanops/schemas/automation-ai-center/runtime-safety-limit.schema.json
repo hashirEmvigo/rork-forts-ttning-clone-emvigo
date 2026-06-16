@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RuntimeSafetyLimit",
+  "type": "object",
+  "required": [
+    "id",
+    "key",
+    "name",
+    "description",
+    "scope",
+    "limitType",
+    "threshold",
+    "unit",
+    "guardAction",
+    "severity",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "module": {
+      "enum": [
+        "schedule",
+        "cases",
+        "chat",
+        "notifications",
+        "keys_alarm",
+        "customer_card",
+        "work_orders",
+        "invoices",
+        "media",
+        "time_bank",
+        "agreements",
+        "employees",
+        "system",
+        null
+      ]
+    },
+    "scope": {
+      "enum": [
+        "session",
+        "user",
+        "company",
+        "role",
+        "module",
+        "route",
+        "endpoint",
+        "automation_action",
+        "background_job",
+        "ai_assistant",
+        "public_surface",
+        "system"
+      ]
+    },
+    "limitType": {
+      "enum": [
+        "request_count",
+        "concurrent_requests",
+        "retry_count",
+        "polling_frequency",
+        "realtime_subscriptions",
+        "payload_size",
+        "upload_size",
+        "export_job_count",
+        "database_row_count",
+        "query_duration",
+        "ai_request_count",
+        "ai_token_budget",
+        "background_job_concurrency"
+      ]
+    },
+    "windowSeconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "threshold": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "guardAction": {
+      "enum": [
+        "log_only",
+        "throttle",
+        "limit_data",
+        "set_read_only",
+        "disable_feature",
+        "open_circuit",
+        "quarantine_session",
+        "block_request",
+        "create_incident",
+        "notify_it_team",
+        "notify_super_admin",
+        "require_manual_review",
+        "fallback_to_cached_or_empty_state"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "high",
+        "critical"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "planned",
+        "active",
+        "disabled",
+        "deprecated"
+      ]
+    },
+    "appliesToRoutes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "appliesToEndpoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "appliesToActionKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fallbackBehavior": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "updatedAt": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

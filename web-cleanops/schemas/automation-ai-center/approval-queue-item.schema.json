@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ApprovalQueueItem",
+  "type": "object",
+  "required": [
+    "id",
+    "sourceActionKey",
+    "sourceExecutionId",
+    "module",
+    "riskLevel",
+    "status",
+    "proposedAction",
+    "aiUsed",
+    "createdAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "sourceActionKey": {
+      "type": "string"
+    },
+    "sourceExecutionId": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "riskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "proposedAction": {
+      "type": "string"
+    },
+    "proposedPayload": {
+      "type": "object"
+    },
+    "aiUsed": {
+      "type": "boolean"
+    },
+    "requiredRole": {
+      "enum": [
+        "admin",
+        "company_admin",
+        "super_admin"
+      ]
+    },
+    "createdAt": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

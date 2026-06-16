@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ModuleCoverage",
+  "type": "object",
+  "required": [
+    "module",
+    "displayName",
+    "integrationStatus",
+    "plannedActions",
+    "activeActions",
+    "aiCapableActions",
+    "aiEnabledActions",
+    "quickReviewStatus",
+    "missingIntegrationPoints"
+  ],
+  "properties": {
+    "module": {
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "integrationStatus": {
+      "enum": [
+        "not_started",
+        "planned",
+        "partial",
+        "ready",
+        "active"
+      ]
+    },
+    "plannedActions": {
+      "type": "integer"
+    },
+    "activeActions": {
+      "type": "integer"
+    },
+    "aiCapableActions": {
+      "type": "integer"
+    },
+    "aiEnabledActions": {
+      "type": "integer"
+    },
+    "quickReviewStatus": {
+      "enum": [
+        "none",
+        "planned",
+        "available"
+      ]
+    },
+    "missingIntegrationPoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lastReviewedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtimeSafetyStatus": {
+      "enum": [
+        "not_started",
+        "planned",
+        "partial",
+        "ready",
+        "active"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

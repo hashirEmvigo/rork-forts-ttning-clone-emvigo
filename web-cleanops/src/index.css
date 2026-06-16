@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CleanOps — Scandinavian business design system.
+   Calm paper-white surfaces, deep slate-blue ink, muted fjord accent.
+   All colors are HSL. */
+
+@layer base {
+  :root {
+    --background: 40 30% 98%;
+    --foreground: 215 30% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 30% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 30% 14%;
+
+    --primary: 213 44% 24%;
+    --primary-foreground: 40 30% 98%;
+
+    --secondary: 210 24% 95%;
+    --secondary-foreground: 213 44% 24%;
+
+    --muted: 210 24% 95%;
+    --muted-foreground: 215 14% 46%;
+
+    --accent: 188 38% 90%;
+    --accent-foreground: 192 50% 22%;
+
+    --destructive: 4 64% 48%;
+    --destructive-foreground: 40 30% 98%;
+
+    --success: 152 40% 38%;
+    --success-foreground: 40 30% 98%;
+
+    --warning: 36 70% 46%;
+    --warning-foreground: 40 30% 98%;
+
+    --border: 214 20% 90%;
+    --input: 214 20% 88%;
+    --ring: 213 44% 24%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 213 44% 14%;
+    --sidebar-foreground: 210 24% 82%;
+    --sidebar-primary: 188 60% 55%;
+    --sidebar-primary-foreground: 213 44% 12%;
+    --sidebar-accent: 213 38% 20%;
+    --sidebar-accent-foreground: 40 30% 98%;
+    --sidebar-border: 213 34% 22%;
+    --sidebar-ring: 188 60% 55%;
+  }
+
+  .dark {
+    --background: 213 38% 9%;
+    --foreground: 210 24% 92%;
+    --card: 213 36% 12%;
+    --card-foreground: 210 24% 92%;
+    --popover: 213 36% 12%;
+    --popover-foreground: 210 24% 92%;
+    --primary: 188 55% 60%;
+    --primary-foreground: 213 44% 12%;
+    --secondary: 213 30% 18%;
+    --secondary-foreground: 210 24% 92%;
+    --muted: 213 30% 18%;
+    --muted-foreground: 210 16% 64%;
+    --accent: 213 30% 20%;
+    --accent-foreground: 210 24% 92%;
+    --destructive: 4 64% 52%;
+    --destructive-foreground: 40 30% 98%;
+    --success: 152 40% 46%;
+    --success-foreground: 40 30% 98%;
+    --warning: 36 70% 52%;
+    --warning-foreground: 40 30% 98%;
+    --border: 213 28% 22%;
+    --input: 213 28% 24%;
+    --ring: 188 55% 60%;
+    --sidebar-background: 213 44% 11%;
+    --sidebar-foreground: 210 24% 82%;
+    --sidebar-primary: 188 60% 55%;
+    --sidebar-primary-foreground: 213 44% 12%;
+    --sidebar-accent: 213 38% 18%;
+    --sidebar-accent-foreground: 40 30% 98%;
+    --sidebar-border: 213 34% 20%;
+    --sidebar-ring: 188 60% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    @apply bg-primary/15;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Fraunces", Georgia, serif;
+  }
+
+  .grain {
+    background-image: radial-gradient(
+        hsl(var(--foreground) / 0.025) 1px,
+        transparent 1px
+      );
+    background-size: 4px 4px;
+  }
+}

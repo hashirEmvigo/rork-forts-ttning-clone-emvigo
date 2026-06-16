@@ -1,0 +1,28 @@
+[
+  {
+    "id": "chat-1",
+    "type": "chat_session",
+    "actor_type": "customer",
+    "actor_id": "customer-anna",
+    "status": "ai_handling",
+    "ai_mode": "mock",
+    "linked_request_id": null,
+    "last_message": "I want to move my cleaning",
+    "automation_action_key": "chat.ai_unable_to_resolve",
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  },
+  {
+    "id": "chat-2",
+    "type": "chat_session",
+    "actor_type": "employee",
+    "actor_id": "employee-elin",
+    "status": "waiting_for_admin",
+    "ai_mode": "mock",
+    "linked_request_id": "req-5553",
+    "last_message": "I have a payroll question",
+    "automation_action_key": "chat.converted_to_request",
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  }
+]

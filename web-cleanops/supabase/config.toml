@@ -1,0 +1,30 @@
+# Supabase project configuration.
+#
+# The admin-create-user function performs its OWN authorization (it supports a
+# self-closing bootstrap path for creating the very first Super Admin without a
+# JWT), so the platform-level JWT gate must be disabled for it. All real
+# authorization happens inside the function.
+[functions.admin-create-user]
+verify_jwt = false
+
+# The admin-delete-user function performs its OWN authorization (active
+# super_admin, or company_admin scoped to their own company). All real
+# authorization happens inside the function, so disable the platform JWT gate.
+[functions.admin-delete-user]
+verify_jwt = false
+
+# The admin-user-lifecycle function performs its OWN authorization (active
+# super_admin, or company_admin scoped to their own company; it also blocks
+# self-disable, last-active-super-admin disable, and company_admin managing
+# super_admins). All real authorization happens inside the function, so disable
+# the platform JWT gate to match the sibling admin functions.
+[functions.admin-user-lifecycle]
+verify_jwt = false
+
+# The public-calculator function is the PUBLIC price-calculator boundary. It is
+# reached by anonymous visitors (no auth), so the platform JWT gate must be off.
+# It performs all input validation itself and uses the service_role key only
+# inside the function to read the calculator tables (which have no anon RLS) and
+# return ONLY public-safe data. It writes nothing.
+[functions.public-calculator]
+verify_jwt = false

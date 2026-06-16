@@ -1,0 +1,33 @@
+[
+  {
+    "id": "apq_001",
+    "sourceActionKey": "schedule.delay.negative_customer_impact_detected",
+    "sourceExecutionId": "exec_mock_001",
+    "module": "schedule",
+    "riskLevel": "high",
+    "status": "pending",
+    "proposedAction": "Review schedule impact and approve customer message draft.",
+    "proposedPayload": {
+      "customerMessageDraft": "We currently estimate arrival approximately 15 minutes later than planned."
+    },
+    "aiUsed": true,
+    "requiredRole": "admin",
+    "createdAt": "2026-06-11T08:30:00Z"
+  },
+  {
+    "id": "apq_002",
+    "sourceActionKey": "keys.access.missing_alarm_code",
+    "sourceExecutionId": "exec_mock_002",
+    "module": "keys_alarm",
+    "riskLevel": "high",
+    "status": "pending",
+    "proposedAction": "Admin must review missing alarm code before upcoming work order.",
+    "proposedPayload": {
+      "workOrderId": "wo_mock_205",
+      "customerId": "cus_mock_090"
+    },
+    "aiUsed": false,
+    "requiredRole": "admin",
+    "createdAt": "2026-06-11T09:05:00Z"
+  }
+]

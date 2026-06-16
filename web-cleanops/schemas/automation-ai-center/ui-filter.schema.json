@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UiFilterDefinition",
+  "type": "object",
+  "required": [
+    "key",
+    "label",
+    "type",
+    "options"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "search",
+        "single_select",
+        "multi_select",
+        "boolean",
+        "date_range"
+      ]
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "defaultValue": {},
+    "appliesTo": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

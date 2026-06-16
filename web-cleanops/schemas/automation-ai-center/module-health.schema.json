@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ModuleHealth",
+  "type": "object",
+  "required": [
+    "module",
+    "displayName",
+    "healthStatus",
+    "openIncidents",
+    "circuitBreakerState",
+    "runtimeState",
+    "lastCheckedAt"
+  ],
+  "properties": {
+    "module": {
+      "enum": [
+        "schedule",
+        "cases",
+        "chat",
+        "notifications",
+        "keys_alarm",
+        "customer_card",
+        "work_orders",
+        "invoices",
+        "media",
+        "time_bank",
+        "agreements",
+        "employees",
+        "system"
+      ]
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "healthStatus": {
+      "enum": [
+        "healthy",
+        "degraded",
+        "limited",
+        "unhealthy",
+        "disabled",
+        "maintenance"
+      ]
+    },
+    "p95LatencyMs": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "errorRatePercent": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "openIncidents": {
+      "type": "integer"
+    },
+    "circuitBreakerState": {
+      "enum": [
+        "closed",
+        "open",
+        "half_open",
+        "not_applicable"
+      ]
+    },
+    "runtimeState": {
+      "enum": [
+        "enabled",
+        "limited_mode",
+        "read_only",
+        "admin_only",
+        "maintenance_mode",
+        "disabled"
+      ]
+    },
+    "lastCheckedAt": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

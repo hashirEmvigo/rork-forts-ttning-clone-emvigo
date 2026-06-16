@@ -1,0 +1,346 @@
+[
+  {
+    "id": "rgp_001",
+    "key": "runtime.guard.booking_list_frontend_loop",
+    "name": "Booking List frontend loop guard",
+    "description": "Detects abnormal repeated Booking List reads from one browser session and applies session-level protection without degrading the full platform.",
+    "module": "schedule",
+    "scope": "session",
+    "triggerType": "frontend_loop_detected",
+    "conditions": [
+      {
+        "key": "request_count_over_session_threshold",
+        "description": "Session exceeds Booking List read threshold inside the configured time window.",
+        "type": "threshold",
+        "config": { "limitKey": "schedule.booking_list.session_read_limit" }
+      }
+    ],
+    "riskLevel": "high",
+    "guardActions": ["throttle", "quarantine_session", "create_incident"],
+    "safetyLimitKeys": ["schedule.booking_list.session_read_limit"],
+    "runtimeFlagKey": "feature.booking_list.auto_refresh",
+    "circuitBreakerKey": null,
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 900,
+      "severity": "high"
+    },
+    "alertPolicy": {
+      "alertTargets": ["dev_team"],
+      "alertOnSeverities": ["high", "critical"],
+      "createFollowUpTask": true,
+      "followUpOwner": "schedule_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": true,
+      "rollbackPlanRequired": true
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_002",
+    "key": "runtime.guard.schedule_grid_bounded_reads",
+    "name": "Schedule Grid bounded reads guard",
+    "description": "Prevents unbounded schedule-grid range reads by limiting the data window and requiring narrower filters.",
+    "module": "schedule",
+    "scope": "user",
+    "triggerType": "resource_quota_exceeded",
+    "conditions": [
+      {
+        "key": "row_count_over_limit",
+        "description": "Requested schedule range exceeds max row limit for one request.",
+        "type": "threshold",
+        "config": { "limitKey": "schedule.schedule_grid.data_window_limit" }
+      }
+    ],
+    "riskLevel": "medium",
+    "guardActions": ["limit_data", "create_incident"],
+    "safetyLimitKeys": ["schedule.schedule_grid.data_window_limit"],
+    "runtimeFlagKey": "feature.schedule.grid",
+    "circuitBreakerKey": null,
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 1800,
+      "severity": "warning"
+    },
+    "alertPolicy": {
+      "alertTargets": ["automation_ai_center_dashboard"],
+      "alertOnSeverities": ["warning", "high", "critical"],
+      "createFollowUpTask": false,
+      "followUpOwner": "schedule_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": false,
+      "rollbackPlanRequired": false
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_003",
+    "key": "runtime.guard.ai_chat_request_budget",
+    "name": "AI chat request budget guard",
+    "description": "Prevents one user from consuming unbounded AI chat requests or repeatedly triggering provider calls.",
+    "module": "chat",
+    "scope": "user",
+    "triggerType": "ai_quota_exceeded",
+    "conditions": [
+      {
+        "key": "ai_requests_over_budget",
+        "description": "User exceeds AI request count budget inside the configured time window.",
+        "type": "threshold",
+        "config": { "limitKey": "ai.chat.user_request_budget" }
+      }
+    ],
+    "riskLevel": "medium",
+    "guardActions": ["throttle", "create_incident", "fallback_to_cached_or_empty_state"],
+    "safetyLimitKeys": ["ai.chat.user_request_budget"],
+    "runtimeFlagKey": "feature.ai.chat",
+    "circuitBreakerKey": "circuit.ai.provider.primary",
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 900,
+      "severity": "warning"
+    },
+    "alertPolicy": {
+      "alertTargets": ["automation_ai_center_dashboard"],
+      "alertOnSeverities": ["high", "critical"],
+      "createFollowUpTask": false,
+      "followUpOwner": "ai_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": true,
+      "rollbackPlanRequired": true
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_004",
+    "key": "runtime.guard.invoice_export_timeout_circuit",
+    "name": "Invoice export timeout circuit guard",
+    "description": "Opens a circuit and limits invoice export when repeated export jobs time out or saturate resources.",
+    "module": "invoices",
+    "scope": "company",
+    "triggerType": "timeout_threshold_exceeded",
+    "conditions": [
+      {
+        "key": "export_concurrency_or_timeout_exceeded",
+        "description": "Company has an active export job or repeated export timeouts.",
+        "type": "threshold",
+        "config": { "limitKey": "invoices.export.company_concurrency_limit", "timeoutMs": 30000 }
+      }
+    ],
+    "riskLevel": "high",
+    "guardActions": ["block_request", "open_circuit", "create_incident", "notify_it_team"],
+    "safetyLimitKeys": ["invoices.export.company_concurrency_limit"],
+    "runtimeFlagKey": "feature.invoices.export",
+    "circuitBreakerKey": "circuit.invoices.export",
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 1800,
+      "severity": "high"
+    },
+    "alertPolicy": {
+      "alertTargets": ["dev_team", "finance_dev"],
+      "alertOnSeverities": ["high", "critical"],
+      "createFollowUpTask": true,
+      "followUpOwner": "finance_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": true,
+      "rollbackPlanRequired": true
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_005",
+    "key": "runtime.guard.media_upload_concurrency",
+    "name": "Media upload concurrency guard",
+    "description": "Prevents upload storms from one company by throttling concurrent uploads and creating an incident when abnormal behavior continues.",
+    "module": "media",
+    "scope": "company",
+    "triggerType": "resource_quota_exceeded",
+    "conditions": [
+      {
+        "key": "concurrent_uploads_over_threshold",
+        "description": "Company exceeds concurrent media upload limit.",
+        "type": "threshold",
+        "config": { "limitKey": "media.upload.company_concurrency_limit" }
+      }
+    ],
+    "riskLevel": "medium",
+    "guardActions": ["throttle", "create_incident"],
+    "safetyLimitKeys": ["media.upload.company_concurrency_limit"],
+    "runtimeFlagKey": "feature.media.upload",
+    "circuitBreakerKey": null,
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 900,
+      "severity": "warning"
+    },
+    "alertPolicy": {
+      "alertTargets": ["automation_ai_center_dashboard"],
+      "alertOnSeverities": ["high", "critical"],
+      "createFollowUpTask": false,
+      "followUpOwner": "media_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": true,
+      "rollbackPlanRequired": false
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_006",
+    "key": "runtime.guard.automation_runner_action_concurrency",
+    "name": "Automation runner action concurrency guard",
+    "description": "Prevents one automation action or company scope from creating unbounded concurrent automation executions.",
+    "module": "system",
+    "scope": "automation_action",
+    "triggerType": "concurrent_limit_exceeded",
+    "conditions": [
+      {
+        "key": "automation_action_concurrency_exceeded",
+        "description": "Automation action exceeds configured background job concurrency limit.",
+        "type": "threshold",
+        "config": { "limitKey": "automation.runner.action_concurrency_limit" }
+      }
+    ],
+    "riskLevel": "critical",
+    "guardActions": ["open_circuit", "block_request", "create_incident", "notify_it_team", "require_manual_review"],
+    "safetyLimitKeys": ["automation.runner.action_concurrency_limit"],
+    "runtimeFlagKey": "feature.automation.runner",
+    "circuitBreakerKey": "circuit.automation.runner",
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 600,
+      "severity": "critical"
+    },
+    "alertPolicy": {
+      "alertTargets": ["dev_team", "super_admin"],
+      "alertOnSeverities": ["critical"],
+      "createFollowUpTask": true,
+      "followUpOwner": "platform_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": true,
+      "rollbackPlanRequired": true
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_007",
+    "key": "runtime.guard.public_pricing_calculator_session_cap",
+    "name": "Public pricing calculator session cap",
+    "description": "Protects the public pricing calculator from request spam and repeated calculation loops.",
+    "module": "system",
+    "scope": "public_surface",
+    "triggerType": "rate_limit_exceeded",
+    "conditions": [
+      {
+        "key": "public_calculator_requests_over_threshold",
+        "description": "Public session exceeds pricing calculator request threshold.",
+        "type": "threshold",
+        "config": { "limitKey": "public.pricing_calculator.session_limit" }
+      }
+    ],
+    "riskLevel": "medium",
+    "guardActions": ["throttle", "fallback_to_cached_or_empty_state", "create_incident"],
+    "safetyLimitKeys": ["public.pricing_calculator.session_limit"],
+    "runtimeFlagKey": "feature.public.pricing_calculator",
+    "circuitBreakerKey": null,
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 900,
+      "severity": "warning"
+    },
+    "alertPolicy": {
+      "alertTargets": ["automation_ai_center_dashboard"],
+      "alertOnSeverities": ["high", "critical"],
+      "createFollowUpTask": false,
+      "followUpOwner": "platform_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": false,
+      "rollbackPlanRequired": false
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  },
+  {
+    "id": "rgp_008",
+    "key": "runtime.guard.customer_card_reload_loop",
+    "name": "Customer Card reload loop guard",
+    "description": "Detects repeated customer card detail reloads from one session and quarantines the session if needed.",
+    "module": "customer_card",
+    "scope": "session",
+    "triggerType": "frontend_loop_detected",
+    "conditions": [
+      {
+        "key": "customer_card_reload_count_exceeded",
+        "description": "Customer Card detail endpoint exceeds session reload threshold.",
+        "type": "threshold",
+        "config": { "limitKey": "customer_card.detail.session_reload_limit" }
+      }
+    ],
+    "riskLevel": "medium",
+    "guardActions": ["quarantine_session", "create_incident"],
+    "safetyLimitKeys": ["customer_card.detail.session_reload_limit"],
+    "runtimeFlagKey": "feature.customer_card.detail",
+    "circuitBreakerKey": null,
+    "incidentPolicy": {
+      "createIncident": true,
+      "updateExisting": true,
+      "dedupeWindowSeconds": 900,
+      "severity": "warning"
+    },
+    "alertPolicy": {
+      "alertTargets": ["automation_ai_center_dashboard"],
+      "alertOnSeverities": ["high", "critical"],
+      "createFollowUpTask": false,
+      "followUpOwner": "customer_team"
+    },
+    "resolutionPolicy": {
+      "requiredForSeverities": ["high", "critical"],
+      "requiresResolutionNotes": true,
+      "requiresRegressionCheck": true,
+      "rollbackPlanRequired": false
+    },
+    "status": "planned",
+    "createdAt": "2026-06-11T12:00:00Z",
+    "updatedAt": "2026-06-11T12:00:00Z"
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "type": "dashboard",
+  "is_test_data": true,
+  "test_batch_id": "request-crm-shell-001",
+  "cards": [
+    {
+      "key": "open_requests",
+      "label": "Open requests",
+      "value": 18
+    },
+    {
+      "key": "unassigned",
+      "label": "Unassigned",
+      "value": 3
+    },
+    {
+      "key": "sla_due_soon",
+      "label": "SLA due soon",
+      "value": 5
+    },
+    {
+      "key": "emergency",
+      "label": "Emergency",
+      "value": 1
+    },
+    {
+      "key": "ai_drafts",
+      "label": "AI drafts",
+      "value": 4
+    },
+    {
+      "key": "automation_linked",
+      "label": "Automation linked",
+      "value": 12
+    }
+  ]
+}

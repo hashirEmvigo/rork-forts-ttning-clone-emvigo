@@ -1,0 +1,106 @@
+[
+  {
+    "id": "exec_mock_001",
+    "actionKey": "schedule.delay.negative_customer_impact_detected",
+    "actionVersion": 1,
+    "status": "pending_approval",
+    "sourceEventKey": "schedule.negative_customer_impact_detected",
+    "sourceEntityType": "work_order",
+    "sourceEntityId": "wo_mock_123",
+    "triggerPayload": {
+      "delayMinutes": 15,
+      "affectedCustomers": 2
+    },
+    "conditionResults": [
+      {
+        "key": "delay_threshold",
+        "passed": true
+      }
+    ],
+    "riskLevel": "high",
+    "approvalRequired": true,
+    "aiUsed": true,
+    "startedAt": "2026-06-11T08:29:00Z",
+    "completedAt": null,
+    "errorMessage": null,
+    "durationMs": 840,
+    "runtimeIncidentId": null,
+    "guardAction": null
+  },
+  {
+    "id": "exec_mock_002",
+    "actionKey": "keys.access.missing_alarm_code",
+    "actionVersion": 1,
+    "status": "pending_approval",
+    "sourceEventKey": "keys.missing_alarm_code_detected",
+    "sourceEntityType": "customer",
+    "sourceEntityId": "cus_mock_090",
+    "triggerPayload": {
+      "assignmentStartsInHours": 3
+    },
+    "conditionResults": [
+      {
+        "key": "alarm_required",
+        "passed": true
+      }
+    ],
+    "riskLevel": "high",
+    "approvalRequired": true,
+    "aiUsed": false,
+    "startedAt": "2026-06-11T09:05:00Z",
+    "completedAt": null,
+    "errorMessage": null,
+    "durationMs": 1200,
+    "runtimeIncidentId": "inc_mock_002",
+    "guardAction": "throttle"
+  },
+  {
+    "id": "exec_mock_003",
+    "actionKey": "schedule.delay.no_customer_impact_logged",
+    "actionVersion": 1,
+    "status": "executed",
+    "sourceEventKey": "schedule.employee_confirmed_no_delay_impact",
+    "sourceEntityType": "work_order",
+    "sourceEntityId": "wo_mock_124",
+    "triggerPayload": {
+      "employeeResponse": "no",
+      "reason": "working_in_break"
+    },
+    "conditionResults": [
+      {
+        "key": "customer_impact",
+        "passed": false
+      }
+    ],
+    "riskLevel": "low",
+    "approvalRequired": false,
+    "aiUsed": false,
+    "startedAt": "2026-06-11T07:45:00Z",
+    "completedAt": "2026-06-11T07:45:01Z",
+    "errorMessage": null
+  },
+  {
+    "id": "exec_mock_004",
+    "actionKey": "notifications.delivery.failed_detected",
+    "actionVersion": 1,
+    "status": "failed",
+    "sourceEventKey": "notifications.delivery_failed",
+    "sourceEntityType": "notification",
+    "sourceEntityId": "not_mock_331",
+    "triggerPayload": {
+      "provider": "mock_provider"
+    },
+    "conditionResults": [
+      {
+        "key": "delivery_failed",
+        "passed": true
+      }
+    ],
+    "riskLevel": "medium",
+    "approvalRequired": false,
+    "aiUsed": false,
+    "startedAt": "2026-06-11T06:20:00Z",
+    "completedAt": "2026-06-11T06:20:02Z",
+    "errorMessage": "Mock delivery provider timeout"
+  }
+]

@@ -1,0 +1,3098 @@
+[
+  {
+    "id": "aa_001",
+    "key": "schedule.delay.employee_late_detected",
+    "name": "Employee late detected",
+    "description": "Detect when an employee check-in is later than planned.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.employee_late_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.employee_late_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.employee_late_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "active",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_002",
+    "key": "schedule.delay.impact_detected",
+    "name": "Delay impact detected",
+    "description": "Detect whether a late arrival may affect the next assignment ETA.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.delay_impact_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.impact_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.impact_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "heavy",
+    "safetyLimitKeys": [
+      "schedule.booking_list.session_read_limit",
+      "schedule.schedule_grid.data_window_limit"
+    ],
+    "timeoutMs": 10000,
+    "maxRetries": 2,
+    "runtimeGuardPolicyKeys": [
+      "runtime.guard.schedule_grid_bounded_reads"
+    ]
+  },
+  {
+    "id": "aa_003",
+    "key": "schedule.delay.employee_confirmation_requested",
+    "name": "Employee delay confirmation requested",
+    "description": "Ask assigned employees whether the next assignment will be delayed.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.delay_impact_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.employee_confirmation_requested.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.employee_confirmation_requested.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-07T08:03:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_004",
+    "key": "schedule.delay.no_customer_impact_logged",
+    "name": "No customer impact logged",
+    "description": "Log delay where employees confirm no customer impact.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.employee_confirmed_no_delay_impact",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.no_customer_impact_logged.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.no_customer_impact_logged.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_005",
+    "key": "schedule.delay.eta_updated",
+    "name": "ETA updated after confirmed delay",
+    "description": "Update estimated arrival time while preserving planned time.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.employee_confirmed_delay_impact",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.eta_updated.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.eta_updated.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_006",
+    "key": "schedule.delay.customer_app_notification_sent",
+    "name": "Customer app delay notification",
+    "description": "Send standard app notification when customer opted in and delay is deterministic.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.eta_updated",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.customer_app_notification_sent.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.customer_app_notification_sent.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-09T08:06:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_007",
+    "key": "schedule.delay.negative_customer_impact_detected",
+    "name": "Negative customer impact detected",
+    "description": "Detect when delay may reduce service quality or affect multiple customers.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.negative_customer_impact_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.delay.negative_customer_impact_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.delay.negative_customer_impact_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_008",
+    "key": "schedule.conflict.assignment_overlap_detected",
+    "name": "Assignment overlap detected",
+    "description": "Detect overlapping assignments for same team or employee.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "schedule.schedule_conflict_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.conflict.assignment_overlap_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.conflict.assignment_overlap_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_009",
+    "key": "schedule.route.travel_time_risk_detected",
+    "name": "Travel time risk detected",
+    "description": "Detect when travel time makes next assignment timing unrealistic.",
+    "module": "schedule",
+    "ownerDomain": "schedule",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "schedule.travel_time_risk_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "schedule.route.travel_time_risk_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "schedule.route.travel_time_risk_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "schedule",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-06T08:09:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_010",
+    "key": "cases.lifecycle.case_created_log",
+    "name": "Case created log",
+    "description": "Create central automation log when a new case is created.",
+    "module": "cases",
+    "ownerDomain": "cases",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "cases.case_created",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "cases.lifecycle.case_created_log.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "cases.lifecycle.case_created_log.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "cases",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_011",
+    "key": "cases.priority.initial_priority_suggested",
+    "name": "Initial case priority suggested",
+    "description": "Suggest default priority from case type and customer context.",
+    "module": "cases",
+    "ownerDomain": "cases",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "cases.case_created",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "cases.priority.initial_priority_suggested.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "cases.priority.initial_priority_suggested.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "observe_only",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "cases",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_012",
+    "key": "cases.sla.unhandled_case_risk",
+    "name": "Unhandled case risk",
+    "description": "Detect open cases with no admin response within threshold.",
+    "module": "cases",
+    "ownerDomain": "cases",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "cases.unhandled_case_risk_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "cases.sla.unhandled_case_risk.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "cases.sla.unhandled_case_risk.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "cases",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-08T08:12:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_013",
+    "key": "cases.routing.owner_suggestion_created",
+    "name": "Case owner suggestion",
+    "description": "Suggest responsible team/admin for a case.",
+    "module": "cases",
+    "ownerDomain": "cases",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "cases.case_created",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "cases.routing.owner_suggestion_created.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "cases.routing.owner_suggestion_created.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "observe_only",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "cases",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_014",
+    "key": "cases.reply.customer_reply_received",
+    "name": "Customer reply received",
+    "description": "Log and notify when customer replies to an open case.",
+    "module": "cases",
+    "ownerDomain": "cases",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "cases.customer_replied",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "cases.reply.customer_reply_received.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "cases.reply.customer_reply_received.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "cases",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_015",
+    "key": "cases.escalation.complaint_case_escalated",
+    "name": "Complaint case escalation",
+    "description": "Escalate cases with complaint indicators.",
+    "module": "cases",
+    "ownerDomain": "cases",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "cases.case_escalated",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "cases.escalation.complaint_case_escalated.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "cases.escalation.complaint_case_escalated.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "cases",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-10T08:15:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_016",
+    "key": "chat.message.customer_received",
+    "name": "Customer chat message received",
+    "description": "Register customer chat message as automation-relevant event.",
+    "module": "chat",
+    "ownerDomain": "chat",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "chat.customer_message_received",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "chat.message.customer_received.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "chat.message.customer_received.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "chat",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_017",
+    "key": "chat.message.unanswered_detected",
+    "name": "Unanswered chat detected",
+    "description": "Detect chat conversations without response inside threshold.",
+    "module": "chat",
+    "ownerDomain": "chat",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "chat.unanswered_message_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "chat.message.unanswered_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "chat.message.unanswered_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "chat",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_018",
+    "key": "chat.message.complaint_detected",
+    "name": "Complaint detected in chat",
+    "description": "Detect complaint language or quality issue in customer chat.",
+    "module": "chat",
+    "ownerDomain": "chat",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "chat.complaint_signal_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "chat.message.complaint_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "chat.message.complaint_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "chat",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-07T08:18:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium",
+    "safetyLimitKeys": [
+      "ai.chat.user_request_budget"
+    ],
+    "timeoutMs": 10000,
+    "maxRetries": 2,
+    "runtimeGuardPolicyKeys": [
+      "runtime.guard.ai_chat_request_budget"
+    ]
+  },
+  {
+    "id": "aa_019",
+    "key": "chat.request.booking_detected",
+    "name": "Booking request detected",
+    "description": "Detect booking request in chat and propose case/request creation.",
+    "module": "chat",
+    "ownerDomain": "chat",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "chat.booking_request_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "chat.request.booking_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "chat.request.booking_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "chat",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_020",
+    "key": "chat.request.cancellation_detected",
+    "name": "Cancellation request detected",
+    "description": "Detect cancellation request and route for admin handling.",
+    "module": "chat",
+    "ownerDomain": "chat",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "chat.cancellation_request_detected",
+      "sourceEntityTypes": [
+        "work_order",
+        "customer",
+        "employee",
+        "case",
+        "message"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "chat.request.cancellation_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "chat.request.cancellation_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "chat",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_021",
+    "key": "notifications.delivery.failed_detected",
+    "name": "Notification delivery failure detected",
+    "description": "Detect failed internal or customer notification delivery.",
+    "module": "notifications",
+    "ownerDomain": "notifications",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "notifications.delivery_failed",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "notifications.delivery.failed_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "notifications.delivery.failed_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "notifications",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-09T08:21:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_022",
+    "key": "notifications.escalation.critical_unacknowledged",
+    "name": "Critical notification unacknowledged",
+    "description": "Escalate critical notification not acknowledged within threshold.",
+    "module": "notifications",
+    "ownerDomain": "notifications",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "notifications.notification_acknowledged",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "notifications.escalation.critical_unacknowledged.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "notifications.escalation.critical_unacknowledged.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "notifications",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_023",
+    "key": "notifications.preference.customer_opt_out_logged",
+    "name": "Customer notification opt-out logged",
+    "description": "Log customer opt-out state for automation policy.",
+    "module": "notifications",
+    "ownerDomain": "notifications",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "notifications.customer_opted_out",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "notifications.preference.customer_opt_out_logged.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "notifications.preference.customer_opt_out_logged.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "notifications",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_024",
+    "key": "keys.access.missing_key_info",
+    "name": "Missing key information",
+    "description": "Detect missing key/access information before assignment.",
+    "module": "keys_alarm",
+    "ownerDomain": "keys_alarm",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "keys.missing_key_info_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "keys.access.missing_key_info.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "keys.access.missing_key_info.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "keys_alarm",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-06T08:24:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_025",
+    "key": "keys.access.missing_alarm_code",
+    "name": "Missing alarm code",
+    "description": "Detect missing alarm code for customer with alarm-enabled property.",
+    "module": "keys_alarm",
+    "ownerDomain": "keys_alarm",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "keys.missing_alarm_code_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "keys.access.missing_alarm_code.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "keys.access.missing_alarm_code.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "keys_alarm",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_026",
+    "key": "keys.access.high_risk_note_added",
+    "name": "High-risk access note added",
+    "description": "Create admin review when high-risk access note is added.",
+    "module": "keys_alarm",
+    "ownerDomain": "keys_alarm",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "keys.high_risk_access_note_added",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "keys.access.high_risk_note_added.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "keys.access.high_risk_note_added.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "keys_alarm",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_027",
+    "key": "keys.access.instruction_conflict",
+    "name": "Access instruction conflict",
+    "description": "Detect conflicting key/alarm/access instructions.",
+    "module": "keys_alarm",
+    "ownerDomain": "keys_alarm",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "keys.access_instruction_conflict_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "keys.access.instruction_conflict.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "keys.access.instruction_conflict.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "keys_alarm",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-08T08:27:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_028",
+    "key": "customer.profile.cleaning_protocol_missing",
+    "name": "Cleaning protocol missing",
+    "description": "Detect missing cleaning protocol for active customer/work order.",
+    "module": "customer_card",
+    "ownerDomain": "customer_card",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "customer.cleaning_protocol_missing",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "customer.profile.cleaning_protocol_missing.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "customer.profile.cleaning_protocol_missing.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "customer_card",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_029",
+    "key": "customer.profile.communication_preference_changed",
+    "name": "Communication preference changed",
+    "description": "Log customer notification and communication preference changes.",
+    "module": "customer_card",
+    "ownerDomain": "customer_card",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "customer.communication_preference_changed",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "customer.profile.communication_preference_changed.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "customer.profile.communication_preference_changed.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "customer_card",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_030",
+    "key": "customer.profile.risk_note_added",
+    "name": "Customer risk note added",
+    "description": "Create review when customer risk note is added.",
+    "module": "customer_card",
+    "ownerDomain": "customer_card",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "customer.risk_note_added",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "customer.profile.risk_note_added.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "customer.profile.risk_note_added.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "customer_card",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-10T08:30:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_031",
+    "key": "work_orders.data.missing_required_info",
+    "name": "Work order missing required info",
+    "description": "Detect missing required data before work order execution.",
+    "module": "work_orders",
+    "ownerDomain": "work_orders",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "work_orders.missing_required_info_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "work_orders.data.missing_required_info.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "work_orders.data.missing_required_info.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "work_orders",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_032",
+    "key": "work_orders.completion.missing_media",
+    "name": "Completion missing media",
+    "description": "Detect missing required completion media.",
+    "module": "work_orders",
+    "ownerDomain": "work_orders",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "work_orders.completion_missing_media",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "work_orders.completion.missing_media.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "work_orders.completion.missing_media.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "work_orders",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_033",
+    "key": "work_orders.quality.issue_detected",
+    "name": "Work order quality issue detected",
+    "description": "Detect quality issue from feedback, media, or case linkage.",
+    "module": "work_orders",
+    "ownerDomain": "work_orders",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "work_orders.quality_issue_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "work_orders.quality.issue_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "work_orders.quality.issue_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "work_orders",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-07T08:33:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_034",
+    "key": "work_orders.assignment.unassigned_risk",
+    "name": "Unassigned work order risk",
+    "description": "Detect upcoming work orders without assigned team.",
+    "module": "work_orders",
+    "ownerDomain": "work_orders",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "work_orders.unassigned_risk_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "work_orders.assignment.unassigned_risk.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "work_orders.assignment.unassigned_risk.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "work_orders",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_035",
+    "key": "invoices.payment.overdue_detected",
+    "name": "Invoice overdue detected",
+    "description": "Detect overdue invoice.",
+    "module": "invoices",
+    "ownerDomain": "invoices",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "invoices.overdue_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "invoices.payment.overdue_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "invoices.payment.overdue_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "invoices",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "heavy",
+    "safetyLimitKeys": [
+      "invoices.export.company_concurrency_limit"
+    ],
+    "timeoutMs": 30000,
+    "maxRetries": 2
+  },
+  {
+    "id": "aa_036",
+    "key": "invoices.question.customer_invoice_question",
+    "name": "Customer invoice question detected",
+    "description": "Detect customer invoice question from chat/case.",
+    "module": "invoices",
+    "ownerDomain": "invoices",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "invoices.customer_invoice_question_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "invoices.question.customer_invoice_question.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "invoices.question.customer_invoice_question.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "invoices",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-09T08:36:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_037",
+    "key": "invoices.rut.status_changed",
+    "name": "RUT status changed",
+    "description": "Log RUT status changes for audit and review.",
+    "module": "invoices",
+    "ownerDomain": "invoices",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "invoices.rut_status_changed",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "invoices.rut.status_changed.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "invoices.rut.status_changed.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "invoices",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_038",
+    "key": "media.required.missing_detected",
+    "name": "Required media missing",
+    "description": "Detect missing required media after assignment completion.",
+    "module": "media",
+    "ownerDomain": "media",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "media.required_media_missing",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "media.required.missing_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "media.required.missing_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "media",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "heavy",
+    "safetyLimitKeys": [
+      "media.upload.company_concurrency_limit"
+    ],
+    "timeoutMs": 10000,
+    "maxRetries": 2
+  },
+  {
+    "id": "aa_039",
+    "key": "media.review.damage_photo_uploaded",
+    "name": "Damage photo uploaded",
+    "description": "Create admin review when damage photo is uploaded.",
+    "module": "media",
+    "ownerDomain": "media",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "media.damage_photo_uploaded",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "media.review.damage_photo_uploaded.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "media.review.damage_photo_uploaded.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "media",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-06T08:39:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_040",
+    "key": "media.review.media_review_required",
+    "name": "Media review required",
+    "description": "Route media requiring manual review.",
+    "module": "media",
+    "ownerDomain": "media",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "media.media_review_required",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "media.review.media_review_required.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "media.review.media_review_required.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "media",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "medium"
+  },
+  {
+    "id": "aa_041",
+    "key": "time_bank.balance.low_detected",
+    "name": "Low time bank balance detected",
+    "description": "Detect low customer time bank balance.",
+    "module": "time_bank",
+    "ownerDomain": "time_bank",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "time_bank.low_balance_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "time_bank.balance.low_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "time_bank.balance.low_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "time_bank",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_042",
+    "key": "time_bank.balance.negative_detected",
+    "name": "Negative time bank balance detected",
+    "description": "Detect negative time bank balance requiring admin review.",
+    "module": "time_bank",
+    "ownerDomain": "time_bank",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "time_bank.negative_balance_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "time_bank.balance.negative_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "time_bank.balance.negative_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "time_bank",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-08T08:42:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_043",
+    "key": "time_bank.adjustment.manual_requested",
+    "name": "Manual time bank adjustment requested",
+    "description": "Route manual adjustment request for approval.",
+    "module": "time_bank",
+    "ownerDomain": "time_bank",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "time_bank.manual_adjustment_requested",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "time_bank.adjustment.manual_requested.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "time_bank.adjustment.manual_requested.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "critical",
+    "executionMode": "requires_super_admin_approval",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "super_admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "time_bank",
+      "critical",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_044",
+    "key": "agreements.renewal.due_detected",
+    "name": "Agreement renewal due detected",
+    "description": "Detect agreement renewal date approaching.",
+    "module": "agreements",
+    "ownerDomain": "agreements",
+    "trigger": {
+      "type": "scheduled_check",
+      "eventKey": "agreements.renewal_due_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "agreements.renewal.due_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "agreements.renewal.due_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "medium",
+    "executionMode": "auto_execute_with_notification",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "agreements",
+      "medium",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_045",
+    "key": "agreements.cancellation.requested",
+    "name": "Agreement cancellation requested",
+    "description": "Route agreement cancellation for admin approval.",
+    "module": "agreements",
+    "ownerDomain": "agreements",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "agreements.cancellation_requested",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "agreements.cancellation.requested.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "agreements.cancellation.requested.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "critical",
+    "executionMode": "requires_super_admin_approval",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "super_admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "agreements",
+      "critical",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-10T08:45:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_046",
+    "key": "agreements.price.change_required",
+    "name": "Agreement price change required",
+    "description": "Detect agreement price change need and create review.",
+    "module": "agreements",
+    "ownerDomain": "agreements",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "agreements.price_change_required",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "agreements.price.change_required.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "agreements.price.change_required.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "critical",
+    "executionMode": "requires_super_admin_approval",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "super_admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "agreements",
+      "critical",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_047",
+    "key": "employees.availability.changed",
+    "name": "Employee availability changed",
+    "description": "Log employee availability changes.",
+    "module": "employees",
+    "ownerDomain": "employees",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "employees.availability_changed",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "employees.availability.changed.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "employees.availability.changed.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "low",
+    "executionMode": "auto_execute_with_log",
+    "approvalPolicy": {
+      "required": false,
+      "requiredRole": null,
+      "allowEditBeforeApproval": false,
+      "allowReject": false,
+      "allowAutoExecuteAfterApproval": false,
+      "reasonRequiredOnReject": false
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "employees",
+      "low",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_048",
+    "key": "employees.absence.reported",
+    "name": "Employee absence reported",
+    "description": "Create schedule/admin review when absence is reported.",
+    "module": "employees",
+    "ownerDomain": "employees",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "employees.absence_reported",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "employees.absence.reported.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "employees.absence.reported.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "employees",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": "2026-06-07T08:48:00Z",
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_049",
+    "key": "employees.shift.conflict_detected",
+    "name": "Employee shift conflict detected",
+    "description": "Detect employee shift conflicts.",
+    "module": "employees",
+    "ownerDomain": "employees",
+    "trigger": {
+      "type": "domain_event",
+      "eventKey": "employees.shift_conflict_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "employees.shift.conflict_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "employees.shift.conflict_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": true,
+    "aiEnabled": true,
+    "version": 1,
+    "tags": [
+      "employees",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "light"
+  },
+  {
+    "id": "aa_050",
+    "key": "system.health.automation_failure_detected",
+    "name": "Automation failure detected",
+    "description": "Detect failed automation execution and create system admin review.",
+    "module": "system",
+    "ownerDomain": "system",
+    "trigger": {
+      "type": "system_health",
+      "eventKey": "system.automation_failure_detected",
+      "sourceEntityTypes": [
+        "customer",
+        "work_order"
+      ]
+    },
+    "conditions": [
+      {
+        "key": "system.health.automation_failure_detected.condition.default",
+        "description": "Domain-specific condition placeholder for future engine. Slice 1 mock only.",
+        "type": "custom_domain_check",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "actions": [
+      {
+        "key": "system.health.automation_failure_detected.action.log",
+        "description": "Create execution log entry.",
+        "type": "create_log",
+        "target": "internal",
+        "config": {
+          "mock": true
+        }
+      }
+    ],
+    "status": "planned",
+    "riskLevel": "high",
+    "executionMode": "requires_admin_review",
+    "approvalPolicy": {
+      "required": true,
+      "requiredRole": "admin",
+      "allowEditBeforeApproval": true,
+      "allowReject": true,
+      "allowAutoExecuteAfterApproval": true,
+      "reasonRequiredOnReject": true
+    },
+    "supportsAi": false,
+    "aiEnabled": false,
+    "version": 1,
+    "tags": [
+      "system",
+      "high",
+      "mock_seed"
+    ],
+    "latestRunAt": null,
+    "createdAt": "2026-06-11T00:00:00Z",
+    "updatedAt": "2026-06-11T00:00:00Z",
+    "resourceProfile": "heavy",
+    "safetyLimitKeys": [
+      "automation.runner.action_concurrency_limit"
+    ],
+    "timeoutMs": 10000,
+    "maxRetries": 2,
+    "featureFlagKey": "feature.automation.runner",
+    "runtimeGuardPolicyKeys": [
+      "runtime.guard.automation_runner_action_concurrency"
+    ]
+  }
+]

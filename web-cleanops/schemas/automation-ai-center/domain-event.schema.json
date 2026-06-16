@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DomainEvent",
+  "type": "object",
+  "required": [
+    "id",
+    "eventKey",
+    "module",
+    "sourceEntityType",
+    "sourceEntityId",
+    "occurredAt",
+    "actorType",
+    "payload"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "eventKey": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "sourceEntityType": {
+      "type": "string"
+    },
+    "sourceEntityId": {
+      "type": "string"
+    },
+    "occurredAt": {
+      "type": "string"
+    },
+    "actorType": {
+      "enum": [
+        "system",
+        "admin",
+        "company_admin",
+        "employee",
+        "customer",
+        "ai"
+      ]
+    },
+    "actorId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "correlationId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

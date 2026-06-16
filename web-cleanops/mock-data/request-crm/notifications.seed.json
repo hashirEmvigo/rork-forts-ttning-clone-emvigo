@@ -1,0 +1,44 @@
+[
+  {
+    "id": "notif-1",
+    "type": "notification",
+    "severity": "prio",
+    "title": "Access request pending",
+    "body": "Marcus requested access to locked request REQ-5549.",
+    "status": "unread",
+    "linked_request_id": "req-5549",
+    "source_event_key": "request.access_requested",
+    "automation_action_key": "request.access_requested",
+    "requires_action": true,
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  },
+  {
+    "id": "notif-2",
+    "type": "notification",
+    "severity": "information",
+    "title": "Customer reply received",
+    "body": "REQ-5551 has a new customer reply.",
+    "status": "acknowledged",
+    "linked_request_id": "req-5551",
+    "source_event_key": "request.customer_message_received",
+    "automation_action_key": "request.customer_message_received",
+    "requires_action": false,
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  },
+  {
+    "id": "notif-3",
+    "type": "notification",
+    "severity": "emergency",
+    "title": "Employee emergency",
+    "body": "Employee requested emergency contact from field.",
+    "status": "unread",
+    "linked_request_id": "req-5554",
+    "source_event_key": "request.emergency_created",
+    "automation_action_key": "request.emergency_created",
+    "requires_action": true,
+    "is_test_data": true,
+    "test_batch_id": "request-crm-shell-001"
+  }
+]

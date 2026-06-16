@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stadportalen.se/schemas/request-domain-event.schema.json",
+  "title": "RequestDomainEvent",
+  "type": "object",
+  "required": [
+    "key",
+    "source_module",
+    "tenant_id",
+    "linked_object_type",
+    "linked_object_id",
+    "payload",
+    "created_at"
+  ],
+  "properties": {
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"
+    },
+    "source_module": {
+      "type": "string"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "linked_object_type": {
+      "type": "string"
+    },
+    "linked_object_id": {
+      "type": "string"
+    },
+    "correlation_id": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "is_test_data": {
+      "type": "boolean"
+    },
+    "test_batch_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cat-customer-service",
+    "name": "Customer Service",
+    "default_priority": "normal",
+    "default_sla_minutes": 240,
+    "email_policy": "email_allowed",
+    "automation_policy_ref": "request.customer_message_received",
+    "ai_extension_ref": "request.ai_suggest_reply",
+    "active": true
+  },
+  {
+    "id": "cat-finance",
+    "name": "Finance",
+    "default_priority": "normal",
+    "default_sla_minutes": 480,
+    "email_policy": "notify_only",
+    "automation_policy_ref": "invoice.question_received",
+    "ai_extension_ref": "request.ai_summarize_invoice_context",
+    "active": true
+  },
+  {
+    "id": "cat-worklead",
+    "name": "Worklead",
+    "default_priority": "high",
+    "default_sla_minutes": 120,
+    "email_policy": "portal_only",
+    "automation_policy_ref": "schedule.delay_or_staff_issue",
+    "ai_extension_ref": "request.ai_suggest_internal_task",
+    "active": true
+  },
+  {
+    "id": "cat-payroll",
+    "name": "Payroll",
+    "default_priority": "high",
+    "default_sla_minutes": 480,
+    "email_policy": "portal_only",
+    "automation_policy_ref": "payroll.question_received",
+    "ai_extension_ref": null,
+    "active": true
+  }
+]

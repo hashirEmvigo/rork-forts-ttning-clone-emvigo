@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PerformanceBudget",
+  "type": "object",
+  "required": [
+    "id",
+    "key",
+    "name",
+    "scopeType",
+    "target",
+    "targetValue",
+    "unit",
+    "status",
+    "owner"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "scopeType": {
+      "enum": [
+        "route",
+        "endpoint",
+        "module",
+        "job",
+        "frontend_bundle",
+        "database_query",
+        "ai_feature"
+      ]
+    },
+    "module": {
+      "enum": [
+        "schedule",
+        "cases",
+        "chat",
+        "notifications",
+        "keys_alarm",
+        "customer_card",
+        "work_orders",
+        "invoices",
+        "media",
+        "time_bank",
+        "agreements",
+        "employees",
+        "system",
+        null
+      ]
+    },
+    "target": {
+      "type": "string"
+    },
+    "targetValue": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "currentValue": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "passing",
+        "warning",
+        "failing",
+        "not_tested"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "lastTestedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stadportalen.se/schemas/request-automation-candidate.schema.json",
+  "title": "RequestAutomationCandidate",
+  "type": "object",
+  "required": [
+    "key",
+    "source_module",
+    "trigger",
+    "conditions",
+    "risk_level",
+    "base_actions",
+    "source_of_truth"
+  ],
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "source_module": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "string"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk_level": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "guard_action": {
+      "type": "string"
+    },
+    "runtime_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "execution_mode": {
+      "enum": [
+        "log_only",
+        "auto_execute_with_log",
+        "requires_admin_review",
+        "requires_approval",
+        "blocked",
+        "planned_mock"
+      ]
+    },
+    "base_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ai_extension_candidate": {
+      "type": "boolean"
+    },
+    "owner_module": {
+      "type": "string"
+    },
+    "source_of_truth": {
+      "const": "Automation & AI Center"
+    },
+    "slice_0_behavior": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
