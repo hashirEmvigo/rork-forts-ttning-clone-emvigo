@@ -41,7 +41,7 @@ export default function CustomerDashboard() {
       ...moduleActions,
       {
         label: "Cleaning days & times",
-        description: "Set preferences",
+        description: "Set your preferences",
         to: "/my-cleaning-preferences",
         icon: CalendarClock,
       },
