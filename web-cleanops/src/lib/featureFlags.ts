@@ -47,17 +47,25 @@ export const USE_SUPABASE_COMPANIES: boolean =
 /**
  * USE_SUPABASE_AUTH
  *
- * When `false` (default): authentication is handled entirely by localStorage,
- *   exactly as today. The Supabase Auth client layer stays completely dormant —
- *   it is never invoked, no session is read, no profile is loaded.
- * When `true`: later migration steps (2B.4+) may route sign-in through Supabase
- *   Auth for selected users. This flag only *enables* that path to exist; it
- *   does NOT change the current login UI on its own.
+ * When `true` (default in real app builds): authentication routes through
+ *   Supabase Auth (PKCE flow). The legacy localStorage path stays as a
+ *   synchronized fallback.
+ * When `false`: the Supabase Auth client layer goes completely dormant — it is
+ *   never invoked, no session is read, no profile is loaded. Authentication
+ *   uses localStorage exclusively.
  *
- * Override at build time with EXPO_PUBLIC_USE_SUPABASE_AUTH=true.
+ * DEFAULT (auth cut-over): this flag is now authoritative-ON in real app builds
+ * via {@link cutoverFlag} — Supabase Auth (PKCE) is the default authentication
+ * path and localStorage is the synchronized fallback. It stays OFF under vitest
+ * so the safe-default suites keep validating the localStorage path. An explicit
+ * env value still overrides either way.
+ *
+ * Rollback is instant and data-free: set EXPO_PUBLIC_USE_SUPABASE_AUTH=false.
+ *
+ * Override at build time with EXPO_PUBLIC_USE_SUPABASE_AUTH=true|false.
  */
 export const USE_SUPABASE_AUTH: boolean =
-  envFlag(import.meta.env.EXPO_PUBLIC_USE_SUPABASE_AUTH) || false;
+  cutoverFlag(import.meta.env.EXPO_PUBLIC_USE_SUPABASE_AUTH);
 
 /**
  * ENABLE_USER_CREATION
