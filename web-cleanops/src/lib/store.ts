@@ -2735,7 +2735,7 @@ export function saveUsers(users: User[]): void {
   const pwById = new Map(existing.map((u) => [u.id, u.password]));
   const merged: SeedUser[] = users.map((u) => ({
     ...u,
-    password: pwById.get(u.id) ?? "password",
+    password: pwById.get(u.id) ?? "",
   }));
   write(USERS_KEY, merged);
 }
@@ -2760,7 +2760,9 @@ export function authenticate(email: string, password: string): User | null {
   if (user.status === "inactive") return null;
   // Admins are never authenticated via localStorage (defense in depth).
   if (LOCAL_AUTH_FORBIDDEN_ROLES.has(user.role)) return null;
-  if ((user.password ?? "password") !== password) return null;
+  // Fail closed when the stored user has no password — never fall back to a
+  // hardcoded default. Users without a password must use the reset flow.
+  if (!user.password || user.password !== password) return null;
   const { password: _pw, ...safe } = user;
   return safe;
 }
